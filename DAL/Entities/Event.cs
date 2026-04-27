@@ -11,5 +11,7 @@ namespace DAL.Entities
         public string Country { get; set; }
         public DateTime Date { get; set; }
         public EventType EventType { get; init; }
+
+        public List<InventoryLog> InventoryLogs { get; init; }
     }
 }
