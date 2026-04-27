@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace TicketInventoryManager.Models.Enums
+namespace DAL.Enums
 {
     public enum TicketStatus
     {

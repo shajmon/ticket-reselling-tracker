@@ -1,7 +1,4 @@
-﻿using Android.Service.Autofill;
-using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using DAL.Enums;
 
 namespace TicketInventoryManager.Models.Entities
 {
@@ -13,6 +10,6 @@ namespace TicketInventoryManager.Models.Entities
         public string City { get; set; }
         public string Country { get; set; }
         public DateTime Date { get; set; }
-        public Enums.EventType EventType { get; init; }
+        public EventType EventType { get; init; }
     }
 }
