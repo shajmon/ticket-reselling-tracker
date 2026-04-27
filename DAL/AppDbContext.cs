@@ -1,20 +1,30 @@
-﻿using DAL.Entities;
+using DAL.Entities;
+using DAL.Enums;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
-namespace DAL.DbContexts
+namespace DAL
 {
-    public class EventDbContext : DbContext
+    public class AppDbContext : DbContext
     {
+        public DbSet<User> Users { get; set; }
         public DbSet<Event> Events { get; set; }
+        public DbSet<InventoryLog> InventoryLogs { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-            => optionsBuilder.UseSqlite("Data Source=events.db");
+            => optionsBuilder.UseSqlite("Data Source=app.db");
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            modelBuilder.Entity<User>().HasData(
+                new User
+                {
+                    Id = 1,
+                    Username = "admin",
+                    PasswordHash = BCrypt.Net.BCrypt.HashPassword("admin"),
+                    IsAdmin = true
+                }
+            );
+
             modelBuilder.Entity<Event>().HasData(
                 new Event
                 {
@@ -24,7 +34,7 @@ namespace DAL.DbContexts
                     City = "London",
                     Country = "UK",
                     Date = new DateTime(2026, 6, 13),
-                    EventType = Enums.EventType.Concert
+                    EventType = EventType.Concert
                 },
                 new Event
                 {
@@ -34,7 +44,7 @@ namespace DAL.DbContexts
                     City = "Paris",
                     Country = "France",
                     Date = new DateTime(2026, 7, 4),
-                    EventType = Enums.EventType.Concert
+                    EventType = EventType.Concert
                 },
                 new Event
                 {
@@ -44,7 +54,7 @@ namespace DAL.DbContexts
                     City = "Las Vegas",
                     Country = "USA",
                     Date = new DateTime(2026, 6, 27),
-                    EventType = Enums.EventType.Sports
+                    EventType = EventType.Sports
                 },
                 new Event
                 {
@@ -54,7 +64,7 @@ namespace DAL.DbContexts
                     City = "London",
                     Country = "UK",
                     Date = new DateTime(2026, 8, 1),
-                    EventType = Enums.EventType.Theatre
+                    EventType = EventType.Theatre
                 },
                 new Event
                 {
@@ -64,7 +74,7 @@ namespace DAL.DbContexts
                     City = "Amsterdam",
                     Country = "Netherlands",
                     Date = new DateTime(2026, 7, 19),
-                    EventType = Enums.EventType.Concert
+                    EventType = EventType.Concert
                 }
             );
         }
