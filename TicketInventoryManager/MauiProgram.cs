@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Logging;
+﻿using DAL;
+using Microsoft.Extensions.Logging;
 
 namespace TicketInventoryManager
 {
@@ -6,6 +7,9 @@ namespace TicketInventoryManager
     {
         public static MauiApp CreateMauiApp()
         {
+            var context = new AppDbContext();
+            context.Database.EnsureCreated();
+
             var builder = MauiApp.CreateBuilder();
             builder
                 .UseMauiApp<App>()
