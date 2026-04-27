@@ -17,7 +17,7 @@ namespace DAL.DbContexts
                 {
                     Id = 0,
                     Username = "admin",
-                    PasswordHash = BCrypt.Net.BCrypt.HashPassword("admin"), 
+                    PasswordHash = BCrypt.Net.BCrypt.HashPassword("admin"),
                     IsAdmin = true
                 }
             );
