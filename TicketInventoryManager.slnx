@@ -1,3 +1,6 @@
 <Solution>
-  <Project Path="TicketInventoryManager/TicketInventoryManager.csproj" />
+  <Project Path="DAL/DAL.csproj" />
+  <Project Path="TicketInventoryManager/TicketInventoryManager.csproj">
+    <Deploy Solution="Debug|*" />
+  </Project>
 </Solution>
