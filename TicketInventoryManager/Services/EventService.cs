@@ -59,7 +59,7 @@ namespace TicketInventoryManager.Services
             await _context.SaveChangesAsync();
         }
 
-        private EventDTO ToDTO(Event eventToMap)
+        private static EventDTO ToDTO(Event eventToMap)
         {
             return new EventDTO
             {
@@ -73,7 +73,7 @@ namespace TicketInventoryManager.Services
             };
         }
 
-        private Event FromDTO(EventDTO eventToMap)
+        private static Event FromDTO(EventDTO eventToMap)
         {
             return new Event
             {
@@ -86,7 +86,7 @@ namespace TicketInventoryManager.Services
             };
         }
 
-        private void UpdateEntity(EventDTO newLog, Event oldLog)
+        private static void UpdateEntity(EventDTO newLog, Event oldLog)
         {
             oldLog.Name = newLog.Name;
             oldLog.VenueName = newLog.VenueName;
