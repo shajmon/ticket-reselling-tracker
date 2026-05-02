@@ -73,22 +73,12 @@ namespace TicketInventoryManager.Services
             return ToDTO(newUser);
         }
 
-        private UserDTO ToDTO(User userToMap)
+        private static UserDTO ToDTO(User userToMap)
         {
             return new UserDTO
             {
                 Id = userToMap.Id,
                 Username = userToMap.Username,
-                IsAdmin = userToMap.IsAdmin
-            };
-        }
-
-        private User FromDTO(UserDTO userToMap, string passwordHash)
-        {
-            return new User
-            {
-                Username = userToMap.Username,
-                PasswordHash = passwordHash,
                 IsAdmin = userToMap.IsAdmin
             };
         }
