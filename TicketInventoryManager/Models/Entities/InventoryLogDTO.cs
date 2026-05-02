@@ -4,7 +4,9 @@ namespace TicketInventoryManager.Models.Entities
 {
     public class InventoryLogDTO
     {
-        public int Id { get; set; } 
+        public int Id { get; set; }
+        public int EventId { get; set; }
+        public int UserId { get; set; }
         public string EventName { get; set; }
         public DateTime EventDate { get; set; }
         public DateTime BuyDate { get; set; }
