@@ -1,5 +1,7 @@
 ﻿using DAL;
+using Microsoft.EntityFrameworkCore.Query.SqlExpressions;
 using Microsoft.Extensions.Logging;
+using TicketInventoryManager.Services;
 
 namespace TicketInventoryManager
 {
@@ -7,9 +9,6 @@ namespace TicketInventoryManager
     {
         public static MauiApp CreateMauiApp()
         {
-            var context = new AppDbContext();
-            context.Database.EnsureCreated();
-
             var builder = MauiApp.CreateBuilder();
             builder
                 .UseMauiApp<App>()
@@ -18,12 +17,19 @@ namespace TicketInventoryManager
                     fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
                     fonts.AddFont("OpenSans-Semibold.ttf", "OpenSansSemibold");
                 });
+            builder.Services.AddDbContext<AppDbContext>();
+            builder.Services.AddTransient<IEventService, EventService>();
+            builder.Services.AddTransient<IUserService, UserService>();
+            builder.Services.AddTransient<IInventoryLogService, InventoryLogService>();
 
 #if DEBUG
     		builder.Logging.AddDebug();
 #endif
+            var app = builder.Build();
+            using var scope = app.Services.CreateScope();
+            scope.ServiceProvider.GetRequiredService<AppDbContext>().Database.EnsureCreated();
 
-            return builder.Build();
+            return app;
         }
     }
 }
