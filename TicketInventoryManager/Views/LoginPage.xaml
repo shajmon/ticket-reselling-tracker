@@ -6,8 +6,14 @@
              x:Class="TicketInventoryManager.Views.LoginPage"
              Title="LoginPage">
     <VerticalStackLayout>
+        <Label IsVisible="{Binding HasLoginError}" Text="{Binding LoginError}"/>
+        <Label IsVisible="{Binding HasRegistrationError}" Text="{Binding RegistrationError}"/>
         <Entry Placeholder="Username" Text="{Binding Username}"/>
         <Entry Placeholder="Password" Text="{Binding Password}"/>
-        <Button Text="Login" Command="{Binding TryLoginCommand}"/>
+        <Button IsVisible="{Binding IsLoggingIn}" Text="Login" Command="{Binding TryLoginCommand}"/>
+        <Entry IsVisible="{Binding IsRegistering}" Placeholder="Repeat password" Text="{Binding RepeatPassword}"/>
+        <Button IsVisible="{Binding IsRegistering}" Text="Register" Command="{Binding RegisterNewUserCommand}"/>
+        <Button IsVisible="{Binding IsLoggingIn}" Text="Don't have an account?" Command="{Binding ChangeModeCommand}"/>
+        <Button IsVisible="{Binding IsRegistering}" Text="Already have an account?" Command="{Binding ChangeModeCommand}"/>
     </VerticalStackLayout>
 </ContentPage>

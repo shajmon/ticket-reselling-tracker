@@ -19,7 +19,9 @@ namespace TicketInventoryManager.ViewModels
         public partial string RepeatPassword { get; set; }
 
         [ObservableProperty]
+        [NotifyPropertyChangedFor(nameof(IsLoggingIn))]
         public partial bool IsRegistering { get; set; }
+        public bool IsLoggingIn => !IsRegistering;
         [ObservableProperty]
         public partial bool IsLoading { get; set; }
         [ObservableProperty]
@@ -77,6 +79,12 @@ namespace TicketInventoryManager.ViewModels
         [RelayCommand]
         public void ChangeMode()
         {
+            if (IsRegistering)
+            {
+                Username = string.Empty;
+                Password = string.Empty;
+            }
+
             IsRegistering = !IsRegistering;
         }
 
