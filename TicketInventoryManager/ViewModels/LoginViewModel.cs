@@ -40,6 +40,7 @@ namespace TicketInventoryManager.ViewModels
             Password = string.Empty;
             RepeatPassword = string.Empty;
             IsRegistering = false;
+            IsLoading = false;
         }
 
         [RelayCommand]
