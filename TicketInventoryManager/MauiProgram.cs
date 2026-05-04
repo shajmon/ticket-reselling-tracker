@@ -18,9 +18,12 @@ namespace TicketInventoryManager
                     fonts.AddFont("OpenSans-Semibold.ttf", "OpenSansSemibold");
                 });
             builder.Services.AddDbContext<AppDbContext>();
+
             builder.Services.AddTransient<IEventService, EventService>();
             builder.Services.AddTransient<IUserService, UserService>();
             builder.Services.AddTransient<IInventoryLogService, InventoryLogService>();
+
+            builder.Services.AddTransient<Views.LoginPage>();
 
 #if DEBUG
     		builder.Logging.AddDebug();
