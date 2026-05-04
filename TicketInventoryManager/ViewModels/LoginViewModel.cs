@@ -17,7 +17,19 @@ namespace TicketInventoryManager.ViewModels
         public partial string Password { get; set; }
         [ObservableProperty]
         public partial string RepeatPassword { get; set; }
-        public bool Registration { get; set; }
+
+        [ObservableProperty]
+        public partial bool IsRegistering { get; set; }
+        [ObservableProperty]
+        public partial bool IsLoading { get; set; }
+        [ObservableProperty]
+        [NotifyPropertyChangedFor(nameof(HasLoginError))]
+        public partial string? LoginError { get; set; }
+        public bool HasLoginError => LoginError != null;
+        [ObservableProperty]
+        [NotifyPropertyChangedFor(nameof(HasRegistrationError))]
+        public partial string? RegistrationError { get; set; }
+        public bool HasRegistrationError => RegistrationError != null;
 
         public LoginViewModel(IUserService userService)
         {
@@ -25,44 +37,52 @@ namespace TicketInventoryManager.ViewModels
             Username = string.Empty;
             Password = string.Empty;
             RepeatPassword = string.Empty;
-            Registration = false;
+            IsRegistering = false;
         }
 
         [RelayCommand]
         public async Task TryLogin()
         {
+            IsLoading = true;
+            LoginError = null;
+
             UserDTO? loggedUser = await _userService.LoginAsync(Username, Password);
+
+            IsLoading = false;
 
             if (loggedUser == null)
             {
-                //invalid username or pass stverec
-            } 
-            else
-            {
-                //reroute na dashboard 
-                //pass userDTO do dalsieho vm
+                LoginError = "Invalid username or password";
+                return;
             }
+            SuccesfulLogin();
         }
 
         [RelayCommand]
         public async Task RegisterNewUser()
         {
+            IsLoading = true;
+            RegistrationError = null;
+
             if (Password == RepeatPassword)
             {
                 await _userService.RegisterAsync(Username, Password);
-                //reroute na dashboard
-                //pass userDTO do dalsieho vm
+                IsLoading = false;
+                SuccesfulLogin();
             }
-            else
-            {
-                //passwords nematchuju stverec
-            }
+            RegistrationError = "Passwords do not match";
+            IsLoading = false;
         }
 
         [RelayCommand]
         public void ChangeMode()
         {
-            Registration = !Registration;
+            IsRegistering = !IsRegistering;
+        }
+
+        private void SuccesfulLogin()
+        {
+            throw new NotImplementedException();
         }
     }
 }
