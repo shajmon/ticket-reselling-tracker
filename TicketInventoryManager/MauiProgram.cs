@@ -25,6 +25,8 @@ namespace TicketInventoryManager
 
             builder.Services.AddTransient<Views.LoginPage>();
 
+            builder.Services.AddTransient<ViewModels.LoginViewModel>();
+
 #if DEBUG
     		builder.Logging.AddDebug();
 #endif
