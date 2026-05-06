@@ -21,7 +21,7 @@ namespace TicketInventoryManager.Models.Entities
         public string BuyPlatform { get; set; }
         public string AccountEmail { get; set; }
         public string SellPlatform { get; set; }
-        public TicketStatus Status { get; set; }
+        public ItemStatus Status { get; set; }
 
         public decimal? Profit => SellPerOne.HasValue ? (SellPerOne - BuyPerOne) * Quantity : null;
         public decimal? Roi => SellPerOne.HasValue && BuyPerOne > 0 ?

@@ -19,7 +19,7 @@ namespace DAL.Entities
         public string BuyPlatform { get; set; }
         public string AccountEmail { get; set; }
         public string SellPlatform { get; set; }
-        public TicketStatus Status { get; set; }
+        public ItemStatus Status { get; set; }
 
         public User User { get; set; }
         public Event Event { get; set; }
