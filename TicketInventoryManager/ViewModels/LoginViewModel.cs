@@ -44,7 +44,7 @@ namespace TicketInventoryManager.ViewModels
         }
 
         [RelayCommand]
-        public async Task TryLogin()
+        private async Task TryLogin()
         {
             IsLoading = true;
             LoginError = null;
@@ -62,7 +62,7 @@ namespace TicketInventoryManager.ViewModels
         }
 
         [RelayCommand]
-        public async Task RegisterNewUser()
+        private async Task RegisterNewUser()
         {
             IsLoading = true;
             RegistrationError = null;
@@ -78,7 +78,7 @@ namespace TicketInventoryManager.ViewModels
         }
 
         [RelayCommand]
-        public void ChangeMode()
+        private void ChangeMode()
         {
             if (IsRegistering)
             {
