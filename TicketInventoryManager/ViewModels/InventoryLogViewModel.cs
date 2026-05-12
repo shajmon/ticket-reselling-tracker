@@ -1,9 +1,7 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using System;
-using System.Collections.Generic;
+using DAL.Enums;
 using System.Collections.ObjectModel;
-using System.Text;
 using TicketInventoryManager.Models.Entities;
 using TicketInventoryManager.Services;
 
@@ -17,6 +15,56 @@ namespace TicketInventoryManager.ViewModels
         [ObservableProperty]
         public partial ObservableCollection<InventoryLogDTO> Logs { get; set; } = [];
 
+        public HashSet<ItemStatus> StatusFilter { get; set; } = [];
+
+        public bool IsNotListedSelected
+        {
+            get => StatusFilter.Contains(ItemStatus.NotListed);
+            set
+            {
+                if (value) StatusFilter.Add(ItemStatus.NotListed);
+                else StatusFilter.Remove(ItemStatus.NotListed);
+                OnPropertyChanged();
+                _ = LoadLogsAsync();
+            }
+        }
+
+        public bool IsListedSelected
+        {
+            get => StatusFilter.Contains(ItemStatus.Listed);
+            set
+            {
+                if (value) StatusFilter.Add(ItemStatus.Listed);
+                else StatusFilter.Remove(ItemStatus.Listed);
+                OnPropertyChanged();
+                _ = LoadLogsAsync();
+            }
+        }
+
+        public bool IsToDeliverSelected
+        {
+            get => StatusFilter.Contains(ItemStatus.ToDeliver);
+            set
+            {
+                if (value) StatusFilter.Add(ItemStatus.ToDeliver);
+                else StatusFilter.Remove(ItemStatus.ToDeliver);
+                OnPropertyChanged();
+                _ = LoadLogsAsync();
+            }
+        }
+
+        public bool IsDeliveredSelected
+        {
+            get => StatusFilter.Contains(ItemStatus.Delivered);
+            set
+            {
+                if (value) StatusFilter.Add(ItemStatus.Delivered);
+                else StatusFilter.Remove(ItemStatus.Delivered);
+                OnPropertyChanged();
+                _ = LoadLogsAsync();
+            }
+        }
+
         public InventoryLogViewModel(IInventoryLogService invLogService, ISessionService sessionService)
         {
             _invLogService = invLogService;
@@ -26,7 +74,13 @@ namespace TicketInventoryManager.ViewModels
         [RelayCommand]
         private async Task Init()
         {
-            Logs = new ObservableCollection<InventoryLogDTO>(await _invLogService.GetAllByUserAsync(_sessionService.CurrentUser!.Id));
+            await LoadLogsAsync();
+        }
+
+        private async Task LoadLogsAsync()
+        {
+            Logs = new ObservableCollection<InventoryLogDTO>(
+                await _invLogService.GetAllByUserAsync(_sessionService.CurrentUser!.Id, StatusFilter));
         }
     }
 }
