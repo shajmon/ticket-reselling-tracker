@@ -1,8 +1,5 @@
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using DAL.Enums;
-using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using TicketInventoryManager.Models.Entities;
 using TicketInventoryManager.Models.Enums;
@@ -24,89 +21,6 @@ namespace TicketInventoryManager.ViewModels
 
         [ObservableProperty]
         public partial DateTime ToSelector { get; set; } = DateTime.Now;
-        public bool IsNotListedSelected
-        {
-            get
-            {
-                return StatusFilter.Contains(ItemStatus.NotListed);
-            }
-            set
-            {
-                if (value)
-                {
-                    StatusFilter.Add(ItemStatus.NotListed);
-                }
-                else
-                {
-                    StatusFilter.Remove(ItemStatus.NotListed);
-                    OnPropertyChanged();
-                    _ = LoadDataAsync();
-                }
-            }
-        }
-        public bool IsListedSelected
-        {
-            get
-            {
-                return StatusFilter.Contains(ItemStatus.Listed);
-            }
-            set
-            {
-                if (value)
-                {
-                    StatusFilter.Add(ItemStatus.Listed);
-                }
-                else
-                {
-                    StatusFilter.Remove(ItemStatus.Listed);
-                    OnPropertyChanged();
-                    _ = LoadDataAsync();
-                }
-            }
-        }
-        public bool IsToDeliverSelected
-        {
-            get
-            {
-                return StatusFilter.Contains(ItemStatus.ToDeliver);
-            }
-            set
-            {
-                if (value)
-                {
-                    StatusFilter.Add(ItemStatus.ToDeliver);
-                }
-                else
-                {
-                    StatusFilter.Remove(ItemStatus.ToDeliver);
-                    OnPropertyChanged();
-                    _ = LoadDataAsync();
-                }
-            }
-        }
-        public bool IsDeliveredSelected
-        {
-            get
-            {
-                return StatusFilter.Contains(ItemStatus.Delivered);
-            }
-            set
-            {
-                if (value)
-                {
-                    StatusFilter.Add(ItemStatus.Delivered);
-                }
-                else
-                {
-                    StatusFilter.Remove(ItemStatus.Delivered);
-                    OnPropertyChanged();
-                    _ = LoadDataAsync();
-                }
-            }
-        }
-
-        [ObservableProperty]
-        public partial HashSet<ItemStatus> StatusFilter { get; set; } = [];
         [ObservableProperty]
         public partial ObservableCollection<EventDTO> Events { get; set; } = [];
         private EventDTO? _selectedEvent;
@@ -249,7 +163,7 @@ namespace TicketInventoryManager.ViewModels
 
                 IsBusy = true;
 
-                var summaryData = await _invLogService.GetSummaryAsync(_user.Id, FromSelector, ToSelector, StatusFilter, EventId);
+                var summaryData = await _invLogService.GetSummaryAsync(_user.Id, FromSelector, ToSelector, EventId);
                 var buys = summaryData.Buys;
                 var sells = summaryData.Sales;
 

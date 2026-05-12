@@ -1,4 +1,3 @@
-using DAL.Enums;
 using TicketInventoryManager.Models.DataSummary;
 using TicketInventoryManager.Models.Entities;
 
@@ -11,8 +10,6 @@ namespace TicketInventoryManager.Services
         Task AddAsync(InventoryLogDTO log);
         Task UpdateAsync(InventoryLogDTO log);
         Task DeleteAsync(int id);
-        Task<DashboardSummary> GetSummaryAsync(int userId, DateTime from, DateTime to,
-                                                      HashSet<ItemStatus> statusFilter,
-                                                      int? eventId = null);
+        Task<DashboardSummary> GetSummaryAsync(int userId, DateTime from, DateTime to, int? eventId = null);
     }
 }

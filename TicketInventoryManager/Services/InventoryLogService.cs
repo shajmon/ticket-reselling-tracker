@@ -1,6 +1,5 @@
 ﻿using DAL;
 using DAL.Entities;
-using DAL.Enums;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using System;
@@ -64,15 +63,11 @@ namespace TicketInventoryManager.Services
             await _context.SaveChangesAsync();
         }
 
-        public async Task<DashboardSummary> GetSummaryAsync(int userId, DateTime from, DateTime to,
-            HashSet<ItemStatus> statusFilter, int? eventId = null)
+        public async Task<DashboardSummary> GetSummaryAsync(int userId, DateTime from, DateTime to, int? eventId = null)
         {
             var baseQuery = _context.InventoryLogs
                 .Where(l => l.UserId == userId)
                 .Where(l => eventId == null || l.EventId == eventId);
-
-            if (statusFilter.Any())
-                baseQuery = baseQuery.Where(l => statusFilter.Contains(l.Status));
 
             var buysQuery = baseQuery.Where(l => l.BuyDate >= from && l.BuyDate <= to);
             var salesQuery = baseQuery

@@ -33,27 +33,7 @@
                     <Button Text="This Year" Command="{Binding SelectThisYearCommand}" />
                 </HorizontalStackLayout>
 
-                <HorizontalStackLayout Spacing="16">
-                    <Label Text="Status:" VerticalOptions="Center" />
-                    <HorizontalStackLayout Spacing="8">
-                        <CheckBox IsChecked="{Binding IsNotListedSelected}" />
-                        <Label Text="Not Listed" VerticalOptions="Center" />
-                    </HorizontalStackLayout>
-                    <HorizontalStackLayout Spacing="8">
-                        <CheckBox IsChecked="{Binding IsListedSelected}" />
-                        <Label Text="Listed" VerticalOptions="Center" />
-                    </HorizontalStackLayout>
-                    <HorizontalStackLayout Spacing="8">
-                        <CheckBox IsChecked="{Binding IsToDeliverSelected}" />
-                        <Label Text="To Deliver" VerticalOptions="Center" />
-                    </HorizontalStackLayout>
-                    <HorizontalStackLayout Spacing="8">
-                        <CheckBox IsChecked="{Binding IsDeliveredSelected}" />
-                        <Label Text="Delivered" VerticalOptions="Center" />
-                    </HorizontalStackLayout>
-                </HorizontalStackLayout>
-
-                <HorizontalStackLayout Spacing="8">
+<HorizontalStackLayout Spacing="8">
                     <Label Text="Event:" VerticalOptions="Center" />
                     <Picker ItemsSource="{Binding Events}"
                             SelectedItem="{Binding SelectedEvent}"
