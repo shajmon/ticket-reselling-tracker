@@ -1,12 +1,115 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:TicketInventoryManager.ViewModels"
+             x:DataType="vm:DashboardViewModel"
              x:Class="TicketInventoryManager.Views.DashboardPage"
-             Title="DashboardPage">
-    <VerticalStackLayout>
-        <Label 
-            Text="Welcome to .NET MAUI!"
-            VerticalOptions="Center" 
-            HorizontalOptions="Center" />
-    </VerticalStackLayout>
+             Title="Dashboard">
+
+    <ScrollView>
+        <VerticalStackLayout Padding="16" Spacing="16">
+
+            <!-- Header -->
+            <HorizontalStackLayout Spacing="8">
+                <Label Text="User: " />
+                <Label Text="{Binding Username}" />
+                <Button Text="Logout" Command="{Binding LogoutCommand}" HorizontalOptions="EndAndExpand" />
+            </HorizontalStackLayout>
+
+            <!-- Filters -->
+            <VerticalStackLayout Spacing="8">
+                <Label Text="Filters" FontAttributes="Bold" />
+
+                <HorizontalStackLayout Spacing="8">
+                    <Label Text="From" VerticalOptions="Center" />
+                    <DatePicker Date="{Binding FromSelector}" />
+                    <Label Text="To" VerticalOptions="Center" />
+                    <DatePicker Date="{Binding ToSelector}" />
+                </HorizontalStackLayout>
+
+                <HorizontalStackLayout Spacing="8">
+                    <Button Text="This Month" Command="{Binding SelectThisMonthCommand}" />
+                    <Button Text="Last Month" Command="{Binding SelectLastMonthCommand}" />
+                    <Button Text="This Year" Command="{Binding SelectThisYearCommand}" />
+                </HorizontalStackLayout>
+            </VerticalStackLayout>
+
+            <!-- Buys -->
+            <VerticalStackLayout Spacing="4">
+                <Label Text="Buys" FontAttributes="Bold" />
+
+                <HorizontalStackLayout Spacing="8">
+                    <Label Text="Tickets bought:" />
+                    <Label Text="{Binding TicketsBought}" />
+                </HorizontalStackLayout>
+
+                <HorizontalStackLayout Spacing="8">
+                    <Label Text="Unsold tickets:" />
+                    <Label Text="{Binding UnsoldTickets}" />
+                </HorizontalStackLayout>
+
+                <HorizontalStackLayout Spacing="8">
+                    <Label Text="Total spent:" />
+                    <Label Text="{Binding TotalSpent}" />
+                </HorizontalStackLayout>
+
+                <HorizontalStackLayout Spacing="8">
+                    <Label Text="Avg ticket price:" />
+                    <Label Text="{Binding AverageTicketBuyPrice}" />
+                </HorizontalStackLayout>
+
+                <HorizontalStackLayout Spacing="8">
+                    <Label Text="Unsold retail value:" />
+                    <Label Text="{Binding TotalUnsoldRetailValue}" />
+                </HorizontalStackLayout>
+            </VerticalStackLayout>
+
+            <!-- Sales -->
+            <VerticalStackLayout Spacing="4">
+                <Label Text="Sales" FontAttributes="Bold" />
+
+                <HorizontalStackLayout Spacing="8">
+                    <Label Text="Tickets sold:" />
+                    <Label Text="{Binding TicketsSold}" />
+                </HorizontalStackLayout>
+
+                <HorizontalStackLayout Spacing="8">
+                    <Label Text="Total revenue:" />
+                    <Label Text="{Binding TotalRevenue}" />
+                </HorizontalStackLayout>
+
+                <HorizontalStackLayout Spacing="8">
+                    <Label Text="Total profit:" />
+                    <Label Text="{Binding TotalProfit}" />
+                </HorizontalStackLayout>
+
+                <HorizontalStackLayout Spacing="8">
+                    <Label Text="Total ROI:" />
+                    <Label Text="{Binding TotalRoi}" />
+                </HorizontalStackLayout>
+
+                <HorizontalStackLayout Spacing="8">
+                    <Label Text="Best profit:" />
+                    <Label Text="{Binding BestProfit}" />
+                </HorizontalStackLayout>
+
+                <HorizontalStackLayout Spacing="8">
+                    <Label Text="Best ROI:" />
+                    <Label Text="{Binding BestRoi}" />
+                </HorizontalStackLayout>
+
+                <HorizontalStackLayout Spacing="8">
+                    <Label Text="Best event spend:" />
+                    <Label Text="{Binding BestEventSpend}" />
+                </HorizontalStackLayout>
+
+                <HorizontalStackLayout Spacing="8">
+                    <Label Text="Best event:" />
+                    <Label Text="{Binding BestEvent.Name}" />
+                </HorizontalStackLayout>
+            </VerticalStackLayout>
+
+        </VerticalStackLayout>
+    </ScrollView>
+
 </ContentPage>
