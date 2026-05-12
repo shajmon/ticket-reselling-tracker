@@ -13,6 +13,7 @@ namespace TicketInventoryManager.ViewModels
     {
         private UserDTO _user;
         private readonly IInventoryLogService _invLogService;
+        private readonly ISessionService _sessionService;
         public string Username => _user.Username;
 
         [ObservableProperty]
@@ -74,9 +75,11 @@ namespace TicketInventoryManager.ViewModels
         [ObservableProperty]
         public partial EventDTO? BestEvent { get; set; }
 
-        public DashboardViewModel(IInventoryLogService inventoryLogService)
+        public DashboardViewModel(IInventoryLogService inventoryLogService, ISessionService sessionService)
         {
             _invLogService = inventoryLogService;
+            _sessionService = sessionService;
+            _user = sessionService.CurrentUser!;
         }
 
         [RelayCommand]

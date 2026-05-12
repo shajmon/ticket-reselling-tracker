@@ -5,12 +5,14 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using TicketInventoryManager.Models.Entities;
 using TicketInventoryManager.Services;
+using TicketInventoryManager.Views;
 
 namespace TicketInventoryManager.ViewModels
 {
     public partial class LoginViewModel : ObservableObject
     {
         private readonly IUserService _userService;
+        private readonly ISessionService _sessionService;
         [ObservableProperty]
         public partial string Username { get; set; }
         [ObservableProperty]
@@ -33,9 +35,10 @@ namespace TicketInventoryManager.ViewModels
         public partial string? RegistrationError { get; set; }
         public bool HasRegistrationError => RegistrationError != null;
 
-        public LoginViewModel(IUserService userService)
+        public LoginViewModel(IUserService userService, ISessionService sessionService)
         {
             _userService = userService;
+            _sessionService = sessionService;
             Username = string.Empty;
             Password = string.Empty;
             RepeatPassword = string.Empty;
@@ -58,7 +61,8 @@ namespace TicketInventoryManager.ViewModels
                 LoginError = "Invalid username or password";
                 return;
             }
-            SuccesfulLogin();
+            _sessionService.CurrentUser = loggedUser;
+            await SuccesfulLogin();
         }
 
         [RelayCommand]
@@ -69,12 +73,15 @@ namespace TicketInventoryManager.ViewModels
 
             if (Password == RepeatPassword)
             {
-                await _userService.RegisterAsync(Username, Password);
+                _sessionService.CurrentUser = await _userService.RegisterAsync(Username, Password);
                 IsLoading = false;
-                SuccesfulLogin();
+                await SuccesfulLogin();
+            } 
+            else
+            {
+                RegistrationError = "Passwords do not match";
+                IsLoading = false;
             }
-            RegistrationError = "Passwords do not match";
-            IsLoading = false;
         }
 
         [RelayCommand]
@@ -89,9 +96,9 @@ namespace TicketInventoryManager.ViewModels
             IsRegistering = !IsRegistering;
         }
 
-        private void SuccesfulLogin()
+        private async Task SuccesfulLogin()
         {
-            throw new NotImplementedException();
+            await Shell.Current.GoToAsync("//dashboard");
         }
     }
 }

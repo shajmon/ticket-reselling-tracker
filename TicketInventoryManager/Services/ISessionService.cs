@@ -5,7 +5,7 @@ using TicketInventoryManager.Models.Entities;
 
 namespace TicketInventoryManager.Services
 {
-    internal interface ISessionService
+    public interface ISessionService
     {
         UserDTO? CurrentUser { get; set; }
     }

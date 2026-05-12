@@ -19,9 +19,12 @@ namespace TicketInventoryManager
                 });
             builder.Services.AddDbContext<AppDbContext>();
 
+            builder.Services.AddSingleton<AppShell>();
+
             builder.Services.AddTransient<IEventService, EventService>();
             builder.Services.AddTransient<IUserService, UserService>();
             builder.Services.AddTransient<IInventoryLogService, InventoryLogService>();
+            builder.Services.AddSingleton<ISessionService, SessionService>();
 
             builder.Services.AddTransient<Views.LoginPage>();
             builder.Services.AddTransient<Views.DashboardPage>();

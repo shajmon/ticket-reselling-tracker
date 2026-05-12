@@ -5,16 +5,16 @@ namespace TicketInventoryManager
 {
     public partial class App : Application
     {
-        private readonly LoginPage _loginPage;
-        public App(LoginPage loginPage)
+        private readonly AppShell _shell;
+        public App(AppShell shell)
         {
             InitializeComponent();
-            _loginPage = loginPage;
+            _shell = shell;
         }
 
         protected override Window CreateWindow(IActivationState? activationState)
         {
-            return new Window(_loginPage);
+            return new Window(_shell);
         }
     }
 }
