@@ -186,5 +186,11 @@ namespace TicketInventoryManager.ViewModels
                 IsBusy = false;
             }
         }
+
+        [RelayCommand]
+        private async Task GoToInventory()
+        {
+            await Shell.Current.GoToAsync("//inventory");
+        }
     }
 }
