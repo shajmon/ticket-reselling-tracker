@@ -9,4 +9,10 @@ public partial class DashboardPage : ContentPage
 		InitializeComponent();
 		BindingContext = dashboardVM;
 	}
+
+	protected override async void OnNavigatedTo(NavigatedToEventArgs args)
+	{
+		base.OnNavigatedTo(args);
+		await ((DashboardViewModel)BindingContext).InitCommand.ExecuteAsync(null);
+	}
 }

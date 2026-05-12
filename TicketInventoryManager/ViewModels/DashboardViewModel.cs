@@ -3,6 +3,7 @@ using CommunityToolkit.Mvvm.Input;
 using DAL.Enums;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using TicketInventoryManager.Models.Entities;
 using TicketInventoryManager.Models.Enums;
 using TicketInventoryManager.Services;
@@ -14,6 +15,8 @@ namespace TicketInventoryManager.ViewModels
         private UserDTO _user;
         private readonly IInventoryLogService _invLogService;
         private readonly ISessionService _sessionService;
+        private readonly IEventService _eventService;
+        private CancellationTokenSource _cts = new();
         public string Username => _user.Username;
 
         [ObservableProperty]
@@ -21,9 +24,107 @@ namespace TicketInventoryManager.ViewModels
 
         [ObservableProperty]
         public partial DateTime ToSelector { get; set; } = DateTime.Now;
+        public bool IsNotListedSelected
+        {
+            get
+            {
+                return StatusFilter.Contains(ItemStatus.NotListed);
+            }
+            set
+            {
+                if (value)
+                {
+                    StatusFilter.Add(ItemStatus.NotListed);
+                }
+                else
+                {
+                    StatusFilter.Remove(ItemStatus.NotListed);
+                    OnPropertyChanged();
+                    _ = LoadDataAsync();
+                }
+            }
+        }
+        public bool IsListedSelected
+        {
+            get
+            {
+                return StatusFilter.Contains(ItemStatus.Listed);
+            }
+            set
+            {
+                if (value)
+                {
+                    StatusFilter.Add(ItemStatus.Listed);
+                }
+                else
+                {
+                    StatusFilter.Remove(ItemStatus.Listed);
+                    OnPropertyChanged();
+                    _ = LoadDataAsync();
+                }
+            }
+        }
+        public bool IsToDeliverSelected
+        {
+            get
+            {
+                return StatusFilter.Contains(ItemStatus.ToDeliver);
+            }
+            set
+            {
+                if (value)
+                {
+                    StatusFilter.Add(ItemStatus.ToDeliver);
+                }
+                else
+                {
+                    StatusFilter.Remove(ItemStatus.ToDeliver);
+                    OnPropertyChanged();
+                    _ = LoadDataAsync();
+                }
+            }
+        }
+        public bool IsDeliveredSelected
+        {
+            get
+            {
+                return StatusFilter.Contains(ItemStatus.Delivered);
+            }
+            set
+            {
+                if (value)
+                {
+                    StatusFilter.Add(ItemStatus.Delivered);
+                }
+                else
+                {
+                    StatusFilter.Remove(ItemStatus.Delivered);
+                    OnPropertyChanged();
+                    _ = LoadDataAsync();
+                }
+            }
+        }
 
         [ObservableProperty]
-        public partial HashSet<ItemStatus> StatusFilter { get; set; }
+        public partial HashSet<ItemStatus> StatusFilter { get; set; } = [];
+        [ObservableProperty]
+        public partial ObservableCollection<EventDTO> Events { get; set; } = [];
+        private EventDTO? _selectedEvent;
+        public EventDTO? SelectedEvent
+        {
+            get
+            {
+                return _selectedEvent;
+            }
+            set
+            {
+                if (SetProperty(ref _selectedEvent, value))
+                {
+                    EventId = value?.Id;
+                    _ = LoadDataAsync();
+                }
+            }
+        }
 
         [ObservableProperty]
         public partial int? EventId { get; set; }
@@ -75,10 +176,11 @@ namespace TicketInventoryManager.ViewModels
         [ObservableProperty]
         public partial EventDTO? BestEvent { get; set; }
 
-        public DashboardViewModel(IInventoryLogService inventoryLogService, ISessionService sessionService)
+        public DashboardViewModel(IInventoryLogService inventoryLogService, ISessionService sessionService, IEventService eventService)
         {
             _invLogService = inventoryLogService;
             _sessionService = sessionService;
+            _eventService = eventService;
             _user = sessionService.CurrentUser!;
         }
 
@@ -106,28 +208,69 @@ namespace TicketInventoryManager.ViewModels
             ToSelector = new DateTime(now.Year, 12, 31);
         }
 
+        [RelayCommand]
+        private async Task Init()
+        {
+            Events = new ObservableCollection<EventDTO>(await _eventService.GetAllAsync());
+            await LoadDataAsync();
+        }
+
+        [RelayCommand]
+        private void ClearEvent()
+        {
+            SelectedEvent = null;
+        }
+
+        [RelayCommand]
+        private async Task Logout()
+        {
+            _sessionService.CurrentUser = null;
+            await Shell.Current.GoToAsync("//login");
+        }
+
+        partial void OnFromSelectorChanged(DateTime value)
+        {
+            _ = LoadDataAsync();
+        }
+
+        partial void OnToSelectorChanged(DateTime value)
+        {
+            _ = LoadDataAsync();
+        }
+
         private async Task LoadDataAsync()
         {
-            IsBusy = true;
+            _cts.Cancel();
+            _cts = new CancellationTokenSource();
+            
+            try
+            {
+                await Task.Delay(50, _cts.Token);
 
-            var summaryData = await _invLogService.GetSummaryAsync(_user.Id, FromSelector, ToSelector, StatusFilter, EventId);
-            var buys = summaryData.Buys;
-            var sells = summaryData.Sales;
+                IsBusy = true;
 
-            TicketsBought = buys.TicketsBought;
-            UnsoldTickets = buys.UnsoldTickets;
-            TotalSpent = buys.TotalSpent;
-            AverageTicketBuyPrice = buys.AverageTicketBuyPrice;
-            TotalUnsoldRetailValue = buys.TotalUnsoldRetailValue;
+                var summaryData = await _invLogService.GetSummaryAsync(_user.Id, FromSelector, ToSelector, StatusFilter, EventId);
+                var buys = summaryData.Buys;
+                var sells = summaryData.Sales;
 
-            TicketsSold = sells.TicketsSold;
-            TotalRevenue = sells.TotalRevenue;
-            TotalProfit = sells.TotalProfit;
-            BestProfit = sells.BestProfit;
-            BestEventSpend = sells.BestEventSpend;
-            BestEvent = sells.BestEvent;
+                TicketsBought = buys.TicketsBought;
+                UnsoldTickets = buys.UnsoldTickets;
+                TotalSpent = buys.TotalSpent;
+                AverageTicketBuyPrice = buys.AverageTicketBuyPrice;
+                TotalUnsoldRetailValue = buys.TotalUnsoldRetailValue;
 
-            IsBusy = false;
+                TicketsSold = sells.TicketsSold;
+                TotalRevenue = sells.TotalRevenue;
+                TotalProfit = sells.TotalProfit;
+                BestProfit = sells.BestProfit;
+                BestEventSpend = sells.BestEventSpend;
+                BestEvent = sells.BestEvent;
+            }
+            catch (OperationCanceledException) { }
+            finally
+            {
+                IsBusy = false;
+            }
         }
     }
 }
