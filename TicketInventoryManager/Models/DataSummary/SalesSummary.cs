@@ -8,6 +8,5 @@ namespace TicketInventoryManager.Models.DataSummary
         decimal TotalProfit,
         decimal BestProfit,
         decimal BestEventSpend,
-        TimeSpan AverageHoldTime,
-        EventDTO BestEvent);
+        EventDTO? BestEvent);
 }

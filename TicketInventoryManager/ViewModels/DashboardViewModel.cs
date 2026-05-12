@@ -16,10 +16,10 @@ namespace TicketInventoryManager.ViewModels
         public string Username => _user.Username;
 
         [ObservableProperty]
-        public partial DateTime? FromSelector { get; set; }
+        public partial DateTime FromSelector { get; set; } = DateTime.MinValue;
 
         [ObservableProperty]
-        public partial DateTime? ToSelector { get; set; }
+        public partial DateTime ToSelector { get; set; } = DateTime.Now;
 
         [ObservableProperty]
         public partial HashSet<ItemStatus> StatusFilter { get; set; }
@@ -52,25 +52,27 @@ namespace TicketInventoryManager.ViewModels
         public partial int TicketsSold { get; set; }
 
         [ObservableProperty]
+        [NotifyPropertyChangedFor(nameof(TotalRoi))]
         public partial decimal TotalRevenue { get; set; }
 
         [ObservableProperty]
+        [NotifyPropertyChangedFor(nameof(TotalRoi))]
         public partial decimal TotalProfit { get; set; }
 
-        [ObservableProperty]
-        public partial decimal TotalRoi { get; set; }
+        public decimal TotalRoi => TotalRevenue == 0 ? 0 : TotalProfit / TotalRevenue * 100;
 
         [ObservableProperty]
+        [NotifyPropertyChangedFor(nameof(BestRoi))]
         public partial decimal BestProfit { get; set; }
 
         [ObservableProperty]
-        public partial decimal BestRoi { get; set; }
+        [NotifyPropertyChangedFor(nameof(BestRoi))]
+        public partial decimal BestEventSpend { get; set; }
+
+        public decimal BestRoi => BestEventSpend == 0 ? 0 : BestProfit / BestEventSpend * 100;
 
         [ObservableProperty]
-        public partial TimeSpan AverageHoldTime { get; set; }
-
-        [ObservableProperty]
-        public partial EventDTO BestEvent { get; set; }
+        public partial EventDTO? BestEvent { get; set; }
 
         public DashboardViewModel(IInventoryLogService inventoryLogService)
         {
@@ -103,7 +105,26 @@ namespace TicketInventoryManager.ViewModels
 
         private async Task LoadDataAsync()
         {
+            IsBusy = true;
 
+            var summaryData = await _invLogService.GetSummaryAsync(_user.Id, FromSelector, ToSelector, StatusFilter, EventId);
+            var buys = summaryData.Buys;
+            var sells = summaryData.Sales;
+
+            TicketsBought = buys.TicketsBought;
+            UnsoldTickets = buys.UnsoldTickets;
+            TotalSpent = buys.TotalSpent;
+            AverageTicketBuyPrice = buys.AverageTicketBuyPrice;
+            TotalUnsoldRetailValue = buys.TotalUnsoldRetailValue;
+
+            TicketsSold = sells.TicketsSold;
+            TotalRevenue = sells.TotalRevenue;
+            TotalProfit = sells.TotalProfit;
+            BestProfit = sells.BestProfit;
+            BestEventSpend = sells.BestEventSpend;
+            BestEvent = sells.BestEvent;
+
+            IsBusy = false;
         }
     }
 }
