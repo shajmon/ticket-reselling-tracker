@@ -81,12 +81,12 @@ namespace TicketInventoryManager.Services
                 {
                     TicketsBought = g.Sum(l => l.Quantity),
                     UnsoldTickets = g.Sum(l => l.Status == ItemStatus.NotListed || l.Status == ItemStatus.Listed ? l.Quantity : 0),
-                    TotalSpent = g.Sum(l => l.BuyPerOne * l.Quantity),
-                    TotalUnsoldRetailValue = g.Sum(l => l.Status == ItemStatus.NotListed || l.Status == ItemStatus.Listed ? l.BuyPerOne * l.Quantity : 0m),
+                    TotalSpent = (double)g.Sum(l => l.BuyPerOne * l.Quantity),
+                    TotalUnsoldRetailValue = (double)g.Sum(l => l.Status == ItemStatus.NotListed || l.Status == ItemStatus.Listed ? l.BuyPerOne * l.Quantity : 0m),
                 })
                 .FirstOrDefaultAsync();
 
-            decimal totalSpent = buysRaw?.TotalSpent ?? 0;
+            decimal totalSpent = (decimal)(buysRaw?.TotalSpent ?? 0);
             int ticketsBought = buysRaw?.TicketsBought ?? 0;
 
             var buysSummary = new BuysSummary(
@@ -94,15 +94,15 @@ namespace TicketInventoryManager.Services
                 buysRaw?.UnsoldTickets ?? 0,
                 totalSpent,
                 ticketsBought > 0 ? totalSpent / ticketsBought : 0,
-                buysRaw?.TotalUnsoldRetailValue ?? 0);
+                (decimal)(buysRaw?.TotalUnsoldRetailValue ?? 0));
 
             var salesRaw = await salesQuery
                 .GroupBy(_ => 1)
                 .Select(g => new
                 {
                     TicketsSold = g.Sum(l => l.Quantity),
-                    TotalRevenue = g.Sum(l => l.SellPerOne!.Value * l.Quantity),
-                    TotalProfit = g.Sum(l => (l.SellPerOne!.Value - l.BuyPerOne) * l.Quantity),
+                    TotalRevenue = (double)g.Sum(l => l.SellPerOne!.Value * l.Quantity),
+                    TotalProfit = (double)g.Sum(l => (l.SellPerOne!.Value - l.BuyPerOne) * l.Quantity),
                 })
                 .FirstOrDefaultAsync();
 
@@ -111,8 +111,8 @@ namespace TicketInventoryManager.Services
                 .Select(g => new
                 {
                     EventId = g.Key,
-                    Profit = g.Sum(l => (l.SellPerOne!.Value - l.BuyPerOne) * l.Quantity),
-                    Spend = g.Sum(l => l.BuyPerOne * l.Quantity),
+                    Profit = (double)g.Sum(l => (l.SellPerOne!.Value - l.BuyPerOne) * l.Quantity),
+                    Spend = (double)g.Sum(l => l.BuyPerOne * l.Quantity),
                 })
                 .OrderByDescending(x => x.Profit)
                 .FirstOrDefaultAsync();
@@ -137,10 +137,10 @@ namespace TicketInventoryManager.Services
 
             var salesSummary = new SalesSummary(
                 salesRaw?.TicketsSold ?? 0,
-                salesRaw?.TotalRevenue ?? 0,
-                salesRaw?.TotalProfit ?? 0,
-                bestEventRaw?.Profit ?? 0,
-                bestEventRaw?.Spend ?? 0,
+                (decimal)(salesRaw?.TotalRevenue ?? 0),
+                (decimal)(salesRaw?.TotalProfit ?? 0),
+                (decimal)(bestEventRaw?.Profit ?? 0),
+                (decimal)(bestEventRaw?.Spend ?? 0),
                 bestEvent);
 
             return new DashboardSummary(buysSummary, salesSummary);

@@ -59,17 +59,17 @@
 
                 <HorizontalStackLayout Spacing="8">
                     <Label Text="Total spent:" />
-                    <Label Text="{Binding TotalSpent}" />
+                    <Label Text="{Binding TotalSpent, StringFormat='€{0:N2}'}" />
                 </HorizontalStackLayout>
 
                 <HorizontalStackLayout Spacing="8">
                     <Label Text="Avg ticket price:" />
-                    <Label Text="{Binding AverageTicketBuyPrice}" />
+                    <Label Text="{Binding AverageTicketBuyPrice, StringFormat='€{0:N2}'}" />
                 </HorizontalStackLayout>
 
                 <HorizontalStackLayout Spacing="8">
                     <Label Text="Unsold retail value:" />
-                    <Label Text="{Binding TotalUnsoldRetailValue}" />
+                    <Label Text="{Binding TotalUnsoldRetailValue, StringFormat='€{0:N2}'}" />
                 </HorizontalStackLayout>
             </VerticalStackLayout>
 
@@ -84,32 +84,32 @@
 
                 <HorizontalStackLayout Spacing="8">
                     <Label Text="Total revenue:" />
-                    <Label Text="{Binding TotalRevenue}" />
+                    <Label Text="{Binding TotalRevenue, StringFormat='€{0:N2}'}" />
                 </HorizontalStackLayout>
 
                 <HorizontalStackLayout Spacing="8">
                     <Label Text="Total profit:" />
-                    <Label Text="{Binding TotalProfit}" />
+                    <Label Text="{Binding TotalProfit, StringFormat='€{0:N2}'}" />
                 </HorizontalStackLayout>
 
                 <HorizontalStackLayout Spacing="8">
                     <Label Text="Total ROI:" />
-                    <Label Text="{Binding TotalRoi}" />
+                    <Label Text="{Binding TotalRoi, StringFormat='{0:N2}%'}" />
                 </HorizontalStackLayout>
 
                 <HorizontalStackLayout Spacing="8">
                     <Label Text="Best profit:" />
-                    <Label Text="{Binding BestProfit}" />
+                    <Label Text="{Binding BestProfit, StringFormat='€{0:N2}'}" />
                 </HorizontalStackLayout>
 
                 <HorizontalStackLayout Spacing="8">
                     <Label Text="Best ROI:" />
-                    <Label Text="{Binding BestRoi}" />
+                    <Label Text="{Binding BestRoi, StringFormat='{0:N2}%'}" />
                 </HorizontalStackLayout>
 
                 <HorizontalStackLayout Spacing="8">
                     <Label Text="Best event spend:" />
-                    <Label Text="{Binding BestEventSpend}" />
+                    <Label Text="{Binding BestEventSpend, StringFormat='€{0:N2}'}" />
                 </HorizontalStackLayout>
 
                 <HorizontalStackLayout Spacing="8">
