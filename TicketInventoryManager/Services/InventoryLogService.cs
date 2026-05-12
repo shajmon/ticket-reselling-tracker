@@ -1,9 +1,12 @@
 ﻿using DAL;
 using DAL.Entities;
+using DAL.Enums;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using TicketInventoryManager.Models.DataSummary;
 using TicketInventoryManager.Models.Entities;
 
 namespace TicketInventoryManager.Services
@@ -59,6 +62,92 @@ namespace TicketInventoryManager.Services
             }
             UpdateEntity(oldLog, newLog);
             await _context.SaveChangesAsync();
+        }
+
+        public async Task<DashboardSummary> GetSummaryAsync(int userId, DateTime from, DateTime to,
+            HashSet<ItemStatus> statusFilter, int? eventId = null)
+        {
+            var baseQuery = _context.InventoryLogs
+                .Where(l => l.UserId == userId)
+                .Where(l => eventId == null || l.EventId == eventId);
+
+            if (statusFilter.Any())
+                baseQuery = baseQuery.Where(l => statusFilter.Contains(l.Status));
+
+            var buysQuery = baseQuery.Where(l => l.BuyDate >= from && l.BuyDate <= to);
+            var salesQuery = baseQuery
+                .Where(l => l.SellDate >= from && l.SellDate <= to)
+                .Where(l => l.SellPerOne != null);
+
+            var buysRaw = await buysQuery
+                .GroupBy(_ => 1)
+                .Select(g => new
+                {
+                    TicketsBought = g.Sum(l => l.Quantity),
+                    UnsoldTickets = g.Sum(l => l.Status == ItemStatus.NotListed || l.Status == ItemStatus.Listed ? l.Quantity : 0),
+                    TotalSpent = g.Sum(l => l.BuyPerOne * l.Quantity),
+                    TotalUnsoldRetailValue = g.Sum(l => l.Status == ItemStatus.NotListed || l.Status == ItemStatus.Listed ? l.BuyPerOne * l.Quantity : 0m),
+                })
+                .FirstOrDefaultAsync();
+
+            decimal totalSpent = buysRaw?.TotalSpent ?? 0;
+            int ticketsBought = buysRaw?.TicketsBought ?? 0;
+
+            var buysSummary = new BuysSummary(
+                ticketsBought,
+                buysRaw?.UnsoldTickets ?? 0,
+                totalSpent,
+                ticketsBought > 0 ? totalSpent / ticketsBought : 0,
+                buysRaw?.TotalUnsoldRetailValue ?? 0);
+
+            var salesRaw = await salesQuery
+                .GroupBy(_ => 1)
+                .Select(g => new
+                {
+                    TicketsSold = g.Sum(l => l.Quantity),
+                    TotalRevenue = g.Sum(l => l.SellPerOne!.Value * l.Quantity),
+                    TotalProfit = g.Sum(l => (l.SellPerOne!.Value - l.BuyPerOne) * l.Quantity),
+                })
+                .FirstOrDefaultAsync();
+
+            var bestEventRaw = await salesQuery
+                .GroupBy(l => l.EventId)
+                .Select(g => new
+                {
+                    EventId = g.Key,
+                    Profit = g.Sum(l => (l.SellPerOne!.Value - l.BuyPerOne) * l.Quantity),
+                    Spend = g.Sum(l => l.BuyPerOne * l.Quantity),
+                })
+                .OrderByDescending(x => x.Profit)
+                .FirstOrDefaultAsync();
+
+            EventDTO? bestEvent = null;
+            if (bestEventRaw != null)
+            {
+                bestEvent = await _context.Events
+                    .Where(e => e.Id == bestEventRaw.EventId)
+                    .Select(e => new EventDTO
+                    {
+                        Id = e.Id,
+                        Name = e.Name,
+                        VenueName = e.VenueName,
+                        City = e.City,
+                        Country = e.Country,
+                        Date = e.Date,
+                        EventType = e.EventType
+                    })
+                    .FirstOrDefaultAsync();
+            }
+
+            var salesSummary = new SalesSummary(
+                salesRaw?.TicketsSold ?? 0,
+                salesRaw?.TotalRevenue ?? 0,
+                salesRaw?.TotalProfit ?? 0,
+                bestEventRaw?.Profit ?? 0,
+                bestEventRaw?.Spend ?? 0,
+                bestEvent);
+
+            return new DashboardSummary(buysSummary, salesSummary);
         }
 
         private static InventoryLogDTO ToDTO(InventoryLog logToMap)
@@ -119,5 +208,7 @@ namespace TicketInventoryManager.Services
             oldLog.SellPlatform = newLog.SellPlatform;
             oldLog.Status = newLog.Status;
         }
+
+        
     }
 }
