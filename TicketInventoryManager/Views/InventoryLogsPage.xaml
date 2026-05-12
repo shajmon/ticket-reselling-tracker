@@ -2,13 +2,41 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:vm="clr-namespace:TicketInventoryManager.ViewModels"
+             xmlns:dto="clr-namespace:TicketInventoryManager.Models.Entities"
              x:DataType="vm:InventoryLogViewModel"
              x:Class="TicketInventoryManager.Views.InventoryLogsPage"
-             Title="InventoryLogsPage">
-    <VerticalStackLayout>
-        <Label 
-            Text="Welcome to .NET MAUI!"
-            VerticalOptions="Center" 
-            HorizontalOptions="Center" />
-    </VerticalStackLayout>
+             Title="Inventory">
+
+    <ScrollView>
+        <VerticalStackLayout Padding="16" Spacing="16">
+
+            <CollectionView ItemsSource="{Binding Logs}">
+                <CollectionView.ItemTemplate>
+                    <DataTemplate x:DataType="dto:InventoryLogDTO">
+                        <VerticalStackLayout Padding="8" Spacing="4">
+
+                            <HorizontalStackLayout Spacing="8">
+                                <Label Text="{Binding EventName}" FontAttributes="Bold" />
+                                <Label Text="{Binding Status}" />
+                            </HorizontalStackLayout>
+
+                            <HorizontalStackLayout Spacing="8">
+                                <Label Text="Sector:" />
+                                <Label Text="{Binding Sector}" />
+                                <Label Text="Qty:" />
+                                <Label Text="{Binding Quantity}" />
+                                <Label Text="Buy:" />
+                                <Label Text="{Binding BuyPerOne, StringFormat='€{0:N2}'}" />
+                                <Label Text="Profit:" />
+                                <Label Text="{Binding Profit, StringFormat='€{0:N2}'}" />
+                            </HorizontalStackLayout>
+
+                        </VerticalStackLayout>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+
+        </VerticalStackLayout>
+    </ScrollView>
+
 </ContentPage>
