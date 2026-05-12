@@ -45,6 +45,16 @@ namespace TicketInventoryManager.Services
                 .ToListAsync();
         }
 
+        public async Task<IEnumerable<InventoryLogDTO>> GetAllByUserAsync(int userId, HashSet<ItemStatus> statusFilter)
+        {
+            return await _context.InventoryLogs
+                .Where(log => log.UserId == userId)
+                .Where(log => !statusFilter.Any() || statusFilter.Contains(log.Status))
+                .Include(log => log.Event)
+                .Select(log => ToDTO(log))
+                .ToListAsync();
+        }
+
         public async Task<InventoryLogDTO?> GetByIdAsync(int id)
         {
             var target = await _context.InventoryLogs
