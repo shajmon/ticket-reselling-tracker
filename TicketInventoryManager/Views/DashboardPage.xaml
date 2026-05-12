@@ -57,7 +57,7 @@
                     <Label Text="Event:" VerticalOptions="Center" />
                     <Picker ItemsSource="{Binding Events}"
                             SelectedItem="{Binding SelectedEvent}"
-                            ItemDisplayBinding="{Binding Name}"
+                            ItemDisplayBinding="{Binding DisplayName}"
                             Title="All events" />
                     <Button Text="Clear" Command="{Binding ClearEventCommand}" />
                 </HorizontalStackLayout>

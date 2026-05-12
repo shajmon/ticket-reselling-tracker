@@ -11,5 +11,6 @@ namespace TicketInventoryManager.Models.Entities
         public string Country { get; set; }
         public DateTime Date { get; set; }
         public EventType EventType { get; init; }
+        public string DisplayName => $"{Name} — {Date:dd MMM yyyy} — {Country}";
     }
 }
