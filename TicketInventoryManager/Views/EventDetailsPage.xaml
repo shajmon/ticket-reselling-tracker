@@ -4,46 +4,122 @@
              xmlns:vm="clr-namespace:TicketInventoryManager.ViewModels"
              x:DataType="vm:EventDetailsViewModel"
              x:Class="TicketInventoryManager.Views.EventDetailsPage"
-             Title="Event Details">
+             BackgroundColor="{StaticResource AppBackground}">
+
+    <ContentPage.Resources>
+        <Style x:Key="FieldLabel" TargetType="Label">
+            <Setter Property="FontSize" Value="11" />
+            <Setter Property="TextColor" Value="{StaticResource AppTextMuted}" />
+            <Setter Property="Margin" Value="0,0,0,4" />
+        </Style>
+        <Style x:Key="FieldBorder" TargetType="Border">
+            <Setter Property="Stroke" Value="{StaticResource AppBorder}" />
+            <Setter Property="StrokeThickness" Value="1" />
+            <Setter Property="StrokeShape" Value="RoundRectangle 8" />
+            <Setter Property="BackgroundColor" Value="{StaticResource AppSurfaceRaised}" />
+            <Setter Property="Margin" Value="0,0,0,14" />
+        </Style>
+        <Style x:Key="SectionCard" TargetType="Border">
+            <Setter Property="BackgroundColor" Value="{StaticResource AppSurface}" />
+            <Setter Property="Stroke" Value="{StaticResource AppBorder}" />
+            <Setter Property="StrokeThickness" Value="1" />
+            <Setter Property="StrokeShape" Value="RoundRectangle 10" />
+            <Setter Property="Padding" Value="20" />
+            <Setter Property="Margin" Value="0,0,0,12" />
+        </Style>
+        <Style x:Key="SectionTitle" TargetType="Label">
+            <Setter Property="FontSize" Value="11" />
+            <Setter Property="TextColor" Value="{StaticResource AppTextMuted}" />
+            <Setter Property="CharacterSpacing" Value="2" />
+            <Setter Property="Margin" Value="0,0,0,16" />
+        </Style>
+    </ContentPage.Resources>
 
     <ScrollView>
-        <VerticalStackLayout Padding="16" Spacing="16">
+        <VerticalStackLayout Padding="24" Spacing="0">
 
-            <VerticalStackLayout Spacing="4">
-                <Label Text="Name" FontAttributes="Bold" />
-                <Entry Text="{Binding Name, Mode=TwoWay}" Placeholder="e.g. Taylor Swift Eras Tour" />
-            </VerticalStackLayout>
+            <!-- Page header -->
+            <Label Text="Event Details"
+                   FontSize="22"
+                   FontAttributes="Bold"
+                   TextColor="{StaticResource AppTextPrimary}"
+                   Margin="0,0,0,20" />
 
-            <VerticalStackLayout Spacing="4">
-                <Label Text="Venue" FontAttributes="Bold" />
-                <Entry Text="{Binding VenueName, Mode=TwoWay}" Placeholder="e.g. Wembley Stadium" />
-            </VerticalStackLayout>
+            <!-- Basic info -->
+            <Border Style="{StaticResource SectionCard}">
+                <VerticalStackLayout>
+                    <Label Text="BASIC INFO" Style="{StaticResource SectionTitle}" />
 
-            <VerticalStackLayout Spacing="4">
-                <Label Text="City" FontAttributes="Bold" />
-                <Entry Text="{Binding City, Mode=TwoWay}" Placeholder="e.g. London" />
-            </VerticalStackLayout>
+                    <Label Text="Name" Style="{StaticResource FieldLabel}" />
+                    <Border Style="{StaticResource FieldBorder}">
+                        <Entry Text="{Binding Name, Mode=TwoWay}" Placeholder="e.g. Taylor Swift Eras Tour" Margin="4,0" />
+                    </Border>
 
-            <VerticalStackLayout Spacing="4">
-                <Label Text="Country" FontAttributes="Bold" />
-                <Entry Text="{Binding Country, Mode=TwoWay}" Placeholder="e.g. UK" />
-            </VerticalStackLayout>
+                    <Label Text="Type" Style="{StaticResource FieldLabel}" />
+                    <Border Style="{StaticResource FieldBorder}" Margin="0,0,0,0">
+                        <Picker ItemsSource="{Binding EventTypes}"
+                                SelectedItem="{Binding EventType}"
+                                IsEnabled="{Binding IsNewEvent}"
+                                Margin="4,0" />
+                    </Border>
+                </VerticalStackLayout>
+            </Border>
 
-            <VerticalStackLayout Spacing="4">
-                <Label Text="Date" FontAttributes="Bold" />
-                <DatePicker Date="{Binding Date}" />
-            </VerticalStackLayout>
+            <!-- Location -->
+            <Border Style="{StaticResource SectionCard}">
+                <VerticalStackLayout>
+                    <Label Text="LOCATION" Style="{StaticResource SectionTitle}" />
 
-            <VerticalStackLayout Spacing="4">
-                <Label Text="Type" FontAttributes="Bold" />
-                <Picker ItemsSource="{Binding EventTypes}"
-                        SelectedItem="{Binding EventType}"
-                        IsEnabled="{Binding IsNewEvent}" />
-            </VerticalStackLayout>
+                    <Label Text="Venue" Style="{StaticResource FieldLabel}" />
+                    <Border Style="{StaticResource FieldBorder}">
+                        <Entry Text="{Binding VenueName, Mode=TwoWay}" Placeholder="e.g. Wembley Stadium" Margin="4,0" />
+                    </Border>
 
-            <Button Text="Save" Command="{Binding SaveCommand}" />
-            <Button Text="Delete" Command="{Binding DeleteCommand}"
-                    IsVisible="{Binding IsExistingEvent}" />
+                    <Grid ColumnDefinitions="*, *" ColumnSpacing="12">
+                        <VerticalStackLayout Grid.Column="0">
+                            <Label Text="City" Style="{StaticResource FieldLabel}" />
+                            <Border Style="{StaticResource FieldBorder}">
+                                <Entry Text="{Binding City, Mode=TwoWay}" Placeholder="e.g. London" Margin="4,0" />
+                            </Border>
+                        </VerticalStackLayout>
+                        <VerticalStackLayout Grid.Column="1">
+                            <Label Text="Country" Style="{StaticResource FieldLabel}" />
+                            <Border Style="{StaticResource FieldBorder}">
+                                <Entry Text="{Binding Country, Mode=TwoWay}" Placeholder="e.g. UK" Margin="4,0" />
+                            </Border>
+                        </VerticalStackLayout>
+                    </Grid>
+                </VerticalStackLayout>
+            </Border>
+
+            <!-- Date -->
+            <Border Style="{StaticResource SectionCard}">
+                <VerticalStackLayout>
+                    <Label Text="DATE" Style="{StaticResource SectionTitle}" />
+                    <Label Text="Event date" Style="{StaticResource FieldLabel}" />
+                    <Border Stroke="{StaticResource AppBorder}"
+                            StrokeThickness="1"
+                            StrokeShape="RoundRectangle 8"
+                            BackgroundColor="{StaticResource AppSurfaceRaised}">
+                        <DatePicker Date="{Binding Date}" Margin="4,0" />
+                    </Border>
+                </VerticalStackLayout>
+            </Border>
+
+            <!-- Actions -->
+            <Button Text="Save"
+                    Command="{Binding SaveCommand}"
+                    HeightRequest="52"
+                    FontAttributes="Bold"
+                    Margin="0,8,0,8" />
+            <Button Text="Delete"
+                    Command="{Binding DeleteCommand}"
+                    IsVisible="{Binding IsExistingEvent}"
+                    BackgroundColor="Transparent"
+                    TextColor="{StaticResource AppAccent}"
+                    BorderColor="{StaticResource AppAccent}"
+                    BorderWidth="1"
+                    HeightRequest="48" />
 
         </VerticalStackLayout>
     </ScrollView>
