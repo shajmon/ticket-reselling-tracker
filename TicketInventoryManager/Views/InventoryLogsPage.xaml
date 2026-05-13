@@ -9,6 +9,7 @@
 
     <ScrollView>
         <VerticalStackLayout Padding="16" Spacing="16">
+            <Button Text="Add new" Command="{Binding NewLogCommand}"/>
 
             <!-- Status filters -->
             <HorizontalStackLayout Spacing="16">
