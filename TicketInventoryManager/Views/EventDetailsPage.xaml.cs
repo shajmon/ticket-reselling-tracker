@@ -9,4 +9,10 @@ public partial class EventDetailsPage : ContentPage
 		InitializeComponent();
 		BindingContext = vm;
 	}
+
+	protected override async void OnAppearing()
+	{
+		base.OnAppearing();
+		await ((EventDetailsViewModel)BindingContext).InitCommand.ExecuteAsync(null);
+	}
 }

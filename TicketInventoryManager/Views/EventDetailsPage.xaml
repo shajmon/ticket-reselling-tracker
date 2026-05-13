@@ -4,11 +4,48 @@
              xmlns:vm="clr-namespace:TicketInventoryManager.ViewModels"
              x:DataType="vm:EventDetailsViewModel"
              x:Class="TicketInventoryManager.Views.EventDetailsPage"
-             Title="EventDetailsPage">
-    <VerticalStackLayout>
-        <Label 
-            Text="Welcome to .NET MAUI!"
-            VerticalOptions="Center" 
-            HorizontalOptions="Center" />
-    </VerticalStackLayout>
+             Title="Event Details">
+
+    <ScrollView>
+        <VerticalStackLayout Padding="16" Spacing="16">
+
+            <VerticalStackLayout Spacing="4">
+                <Label Text="Name" FontAttributes="Bold" />
+                <Entry Text="{Binding Name, Mode=TwoWay}" Placeholder="e.g. Taylor Swift Eras Tour" />
+            </VerticalStackLayout>
+
+            <VerticalStackLayout Spacing="4">
+                <Label Text="Venue" FontAttributes="Bold" />
+                <Entry Text="{Binding VenueName, Mode=TwoWay}" Placeholder="e.g. Wembley Stadium" />
+            </VerticalStackLayout>
+
+            <VerticalStackLayout Spacing="4">
+                <Label Text="City" FontAttributes="Bold" />
+                <Entry Text="{Binding City, Mode=TwoWay}" Placeholder="e.g. London" />
+            </VerticalStackLayout>
+
+            <VerticalStackLayout Spacing="4">
+                <Label Text="Country" FontAttributes="Bold" />
+                <Entry Text="{Binding Country, Mode=TwoWay}" Placeholder="e.g. UK" />
+            </VerticalStackLayout>
+
+            <VerticalStackLayout Spacing="4">
+                <Label Text="Date" FontAttributes="Bold" />
+                <DatePicker Date="{Binding Date}" />
+            </VerticalStackLayout>
+
+            <VerticalStackLayout Spacing="4">
+                <Label Text="Type" FontAttributes="Bold" />
+                <Picker ItemsSource="{Binding EventTypes}"
+                        SelectedItem="{Binding EventType}"
+                        IsEnabled="{Binding IsNewEvent}" />
+            </VerticalStackLayout>
+
+            <Button Text="Save" Command="{Binding SaveCommand}" />
+            <Button Text="Delete" Command="{Binding DeleteCommand}"
+                    IsVisible="{Binding IsExistingEvent}" />
+
+        </VerticalStackLayout>
+    </ScrollView>
+
 </ContentPage>
