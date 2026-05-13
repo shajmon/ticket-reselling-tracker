@@ -15,6 +15,7 @@
                 <Label Text="{Binding Username}" />
                 <Button Text="Logout" Command="{Binding LogoutCommand}" HorizontalOptions="EndAndExpand" />
                 <Button Text="Inventory" Command="{Binding GoToInventoryCommand}"/>
+                <Button Text="Events Manager" Command="{Binding GoToEventsCommand}" IsVisible="{Binding User.IsAdmin}"/>
             </HorizontalStackLayout>
 
             <!-- Filters -->

@@ -9,12 +9,12 @@ namespace TicketInventoryManager.ViewModels
 {
     public partial class DashboardViewModel : ObservableObject
     {
-        private UserDTO _user;
+        public UserDTO User;
         private readonly IInventoryLogService _invLogService;
         private readonly ISessionService _sessionService;
         private readonly IEventService _eventService;
         private CancellationTokenSource _cts = new();
-        public string Username => _user.Username;
+        public string Username => User.Username;
 
         [ObservableProperty]
         public partial DateTime FromSelector { get; set; } = DateTime.MinValue;
@@ -95,7 +95,7 @@ namespace TicketInventoryManager.ViewModels
             _invLogService = inventoryLogService;
             _sessionService = sessionService;
             _eventService = eventService;
-            _user = sessionService.CurrentUser!;
+            User = sessionService.CurrentUser!;
         }
 
         [RelayCommand]
@@ -163,7 +163,7 @@ namespace TicketInventoryManager.ViewModels
 
                 IsBusy = true;
 
-                var summaryData = await _invLogService.GetSummaryAsync(_user.Id, FromSelector, ToSelector, EventId);
+                var summaryData = await _invLogService.GetSummaryAsync(User.Id, FromSelector, ToSelector, EventId);
                 var buys = summaryData.Buys;
                 var sells = summaryData.Sales;
 
@@ -191,6 +191,12 @@ namespace TicketInventoryManager.ViewModels
         private async Task GoToInventory()
         {
             await Shell.Current.GoToAsync("//inventory");
+        }
+
+        [RelayCommand]
+        private async Task GoToEvents()
+        {
+            await Shell.Current.GoToAsync("//events");
         }
     }
 }
