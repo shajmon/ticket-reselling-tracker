@@ -48,7 +48,7 @@
     </ContentPage.Resources>
 
     <ScrollView>
-        <VerticalStackLayout Padding="24" Spacing="16">
+        <VerticalStackLayout Padding="24" Spacing="16" MaximumWidthRequest="1000">
 
             <!-- Header -->
             <Grid ColumnDefinitions="*, Auto">
