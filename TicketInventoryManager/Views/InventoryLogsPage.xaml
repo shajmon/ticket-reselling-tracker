@@ -5,60 +5,145 @@
              xmlns:dto="clr-namespace:TicketInventoryManager.Models.Entities"
              x:DataType="vm:InventoryLogViewModel"
              x:Class="TicketInventoryManager.Views.InventoryLogsPage"
-             Title="Inventory">
+             BackgroundColor="{StaticResource AppBackground}">
+
+    <ContentPage.Resources>
+        <Style x:Key="GhostButton" TargetType="Button">
+            <Setter Property="BackgroundColor" Value="Transparent" />
+            <Setter Property="TextColor" Value="{StaticResource AppTextMuted}" />
+            <Setter Property="FontSize" Value="13" />
+            <Setter Property="Padding" Value="8,6" />
+            <Setter Property="VisualStateManager.VisualStateGroups">
+                <VisualStateGroupList>
+                    <VisualStateGroup x:Name="CommonStates">
+                        <VisualState x:Name="Normal" />
+                        <VisualState x:Name="PointerOver">
+                            <VisualState.Setters>
+                                <Setter Property="TextColor" Value="{StaticResource AppTextPrimary}" />
+                            </VisualState.Setters>
+                        </VisualState>
+                    </VisualStateGroup>
+                </VisualStateGroupList>
+            </Setter>
+        </Style>
+        <Style x:Key="ChipButton" TargetType="Button">
+            <Setter Property="BackgroundColor" Value="{StaticResource AppSurfaceRaised}" />
+            <Setter Property="TextColor" Value="{StaticResource AppTextMuted}" />
+            <Setter Property="FontSize" Value="12" />
+            <Setter Property="CornerRadius" Value="6" />
+            <Setter Property="Padding" Value="10,6" />
+            <Setter Property="VisualStateManager.VisualStateGroups">
+                <VisualStateGroupList>
+                    <VisualStateGroup x:Name="CommonStates">
+                        <VisualState x:Name="Normal" />
+                        <VisualState x:Name="PointerOver">
+                            <VisualState.Setters>
+                                <Setter Property="TextColor" Value="{StaticResource AppTextPrimary}" />
+                            </VisualState.Setters>
+                        </VisualState>
+                    </VisualStateGroup>
+                </VisualStateGroupList>
+            </Setter>
+        </Style>
+    </ContentPage.Resources>
 
     <ScrollView>
-        <VerticalStackLayout Padding="16" Spacing="16">
-            <Button Text="Add new" Command="{Binding NewLogCommand}"/>
-            <Button Text="Back to Dashboard" Command="{Binding GoToDashboardCommand}"/>
-            <Button Text="Export" Command="{Binding ExportLogsCommand}"/>
-            <Button Text="Import" Command="{Binding ImportLogsCommand}"/>
+        <VerticalStackLayout Padding="24" Spacing="16">
+
+            <!-- Header -->
+            <Grid ColumnDefinitions="*, Auto">
+                <Label Grid.Column="0"
+                       Text="Inventory"
+                       FontSize="22"
+                       FontAttributes="Bold"
+                       TextColor="{StaticResource AppTextPrimary}"
+                       VerticalOptions="Center" />
+                <HorizontalStackLayout Grid.Column="1" Spacing="4" VerticalOptions="Center">
+                    <Button Text="Dashboard"
+                            Command="{Binding GoToDashboardCommand}"
+                            Style="{StaticResource GhostButton}" />
+                    <Button Text="Export"
+                            Command="{Binding ExportLogsCommand}"
+                            Style="{StaticResource ChipButton}" />
+                    <Button Text="Import"
+                            Command="{Binding ImportLogsCommand}"
+                            Style="{StaticResource ChipButton}" />
+                    <Button Text="+ Add"
+                            Command="{Binding NewLogCommand}"
+                            FontSize="13"
+                            Padding="12,6"
+                            CornerRadius="6" />
+                </HorizontalStackLayout>
+            </Grid>
 
             <!-- Status filters -->
             <HorizontalStackLayout Spacing="16">
-                <Label Text="Status:" VerticalOptions="Center" />
-                <HorizontalStackLayout Spacing="8">
-                    <CheckBox IsChecked="{Binding IsNotListedSelected}" />
-                    <Label Text="Not Listed" VerticalOptions="Center" />
+                <Label Text="Filter"
+                       FontSize="11"
+                       TextColor="{StaticResource AppTextMuted}"
+                       VerticalOptions="Center" />
+                <HorizontalStackLayout Spacing="6">
+                    <CheckBox IsChecked="{Binding IsNotListedSelected}" Color="{StaticResource AppAccent}" />
+                    <Label Text="Not Listed" FontSize="13" TextColor="{StaticResource AppTextMuted}" VerticalOptions="Center" />
                 </HorizontalStackLayout>
-                <HorizontalStackLayout Spacing="8">
-                    <CheckBox IsChecked="{Binding IsListedSelected}" />
-                    <Label Text="Listed" VerticalOptions="Center" />
+                <HorizontalStackLayout Spacing="6">
+                    <CheckBox IsChecked="{Binding IsListedSelected}" Color="{StaticResource AppAccent}" />
+                    <Label Text="Listed" FontSize="13" TextColor="{StaticResource AppTextMuted}" VerticalOptions="Center" />
                 </HorizontalStackLayout>
-                <HorizontalStackLayout Spacing="8">
-                    <CheckBox IsChecked="{Binding IsToDeliverSelected}" />
-                    <Label Text="To Deliver" VerticalOptions="Center" />
+                <HorizontalStackLayout Spacing="6">
+                    <CheckBox IsChecked="{Binding IsToDeliverSelected}" Color="{StaticResource AppAccent}" />
+                    <Label Text="To Deliver" FontSize="13" TextColor="{StaticResource AppTextMuted}" VerticalOptions="Center" />
                 </HorizontalStackLayout>
-                <HorizontalStackLayout Spacing="8">
-                    <CheckBox IsChecked="{Binding IsDeliveredSelected}" />
-                    <Label Text="Delivered" VerticalOptions="Center" />
+                <HorizontalStackLayout Spacing="6">
+                    <CheckBox IsChecked="{Binding IsDeliveredSelected}" Color="{StaticResource AppAccent}" />
+                    <Label Text="Delivered" FontSize="13" TextColor="{StaticResource AppTextMuted}" VerticalOptions="Center" />
                 </HorizontalStackLayout>
             </HorizontalStackLayout>
 
-            <CollectionView ItemsSource="{Binding Logs}" SelectionMode="Single" SelectedItem="{Binding SelectedLog, Mode=TwoWay}">
+            <!-- Log list -->
+            <CollectionView ItemsSource="{Binding Logs}"
+                            SelectionMode="Single"
+                            SelectedItem="{Binding SelectedLog, Mode=TwoWay}">
                 <CollectionView.ItemTemplate>
                     <DataTemplate x:DataType="dto:InventoryLogDTO">
-                        <VerticalStackLayout Padding="8" Spacing="4">
+                        <Border BackgroundColor="{StaticResource AppSurface}"
+                                Stroke="{StaticResource AppBorder}"
+                                StrokeThickness="1"
+                                StrokeShape="RoundRectangle 10"
+                                Padding="16,14"
+                                Margin="0,0,0,8">
+                            <Grid RowDefinitions="Auto, Auto" RowSpacing="8">
 
-                            <HorizontalStackLayout Spacing="8">
-                                <Label Text="{Binding EventName}" FontAttributes="Bold" />
-                                <Label Text="{Binding Status}" />
-                            </HorizontalStackLayout>
+                                <Grid Grid.Row="0" ColumnDefinitions="*, Auto">
+                                    <Label Grid.Column="0"
+                                           Text="{Binding EventName}"
+                                           FontAttributes="Bold"
+                                           FontSize="15"
+                                           TextColor="{StaticResource AppTextPrimary}" />
+                                    <Label Grid.Column="1"
+                                           Text="{Binding Status}"
+                                           FontSize="11"
+                                           TextColor="{StaticResource AppTextMuted}"
+                                           VerticalOptions="Center" />
+                                </Grid>
 
-                            <HorizontalStackLayout Spacing="8">
-                                <Label Text="Sector:" />
-                                <Label Text="{Binding Sector}" />
-                                <Label Text="Qty:" />
-                                <Label Text="{Binding Quantity}" />
-                                <Label Text="Buy:" />
-                                <Label Text="{Binding BuyPerOne, StringFormat='€{0:N2}'}" />
-                                <Label Text="Sell:" />
-                                <Label Text="{Binding SellPerOne, StringFormat='€{0:N2}', TargetNullValue=''}" />
-                                <Label Text="Profit:" />
-                                <Label Text="{Binding Profit, StringFormat='€{0:N2}', TargetNullValue=''}" />
-                            </HorizontalStackLayout>
+                                <HorizontalStackLayout Grid.Row="1" Spacing="16">
+                                    <HorizontalStackLayout Spacing="4">
+                                        <Label Text="{Binding Sector}" FontSize="13" TextColor="{StaticResource AppTextMuted}" />
+                                        <Label Text="·" FontSize="13" TextColor="{StaticResource AppTextMuted}" />
+                                        <Label Text="{Binding Quantity, StringFormat='×{0}'}" FontSize="13" TextColor="{StaticResource AppTextMuted}" />
+                                    </HorizontalStackLayout>
+                                    <Label Text="{Binding BuyPerOne, StringFormat='€{0:N2}'}"
+                                           FontSize="13"
+                                           TextColor="{StaticResource AppTextMuted}" />
+                                    <Label Text="{Binding Profit, StringFormat='€{0:N2}', TargetNullValue=''}"
+                                           FontSize="13"
+                                           FontAttributes="Bold"
+                                           TextColor="#D93030" />
+                                </HorizontalStackLayout>
 
-                        </VerticalStackLayout>
+                            </Grid>
+                        </Border>
                     </DataTemplate>
                 </CollectionView.ItemTemplate>
             </CollectionView>
