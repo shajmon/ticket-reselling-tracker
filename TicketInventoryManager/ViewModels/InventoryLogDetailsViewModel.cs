@@ -16,6 +16,7 @@ namespace TicketInventoryManager.ViewModels
 
         public int LogId { get; set; }
         public bool IsExistingLog => LogId != 0;
+        public IList<ItemStatus> Statuses { get; } = Enum.GetValues<ItemStatus>().ToList();
 
         [ObservableProperty]
         public partial ObservableCollection<EventDTO> Events { get; set; } = [];

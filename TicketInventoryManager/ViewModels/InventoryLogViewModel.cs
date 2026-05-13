@@ -65,6 +65,20 @@ namespace TicketInventoryManager.ViewModels
             }
         }
 
+        private InventoryLogDTO? _selectedLog;
+        public InventoryLogDTO? SelectedLog
+        {
+            get => _selectedLog;
+            set
+            {
+                if (SetProperty(ref _selectedLog, value) && value != null)
+                {
+                    _ = ShowDetails(value.Id);
+                    SetProperty(ref _selectedLog, null);
+                }
+            }
+        }
+
         public InventoryLogViewModel(IInventoryLogService invLogService, ISessionService sessionService)
         {
             _invLogService = invLogService;
@@ -75,6 +89,12 @@ namespace TicketInventoryManager.ViewModels
         private async Task Init()
         {
             await LoadLogsAsync();
+        }
+
+        [RelayCommand]
+        private async Task ShowDetails(int id)
+        {
+            await Shell.Current.GoToAsync($"logdetail?id={id}");
         }
 
         private async Task LoadLogsAsync()

@@ -7,8 +7,7 @@ namespace TicketInventoryManager
         public AppShell()
         {
             InitializeComponent();
-            
-            Routing.RegisterRoute(nameof(DashboardPage), typeof(DashboardPage));
+            Routing.RegisterRoute("logdetail", typeof(InventoryLogDetailsPage));
         }
     }
 }

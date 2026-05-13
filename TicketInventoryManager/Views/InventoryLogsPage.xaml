@@ -31,7 +31,7 @@
                 </HorizontalStackLayout>
             </HorizontalStackLayout>
 
-            <CollectionView ItemsSource="{Binding Logs}">
+            <CollectionView ItemsSource="{Binding Logs}" SelectionMode="Single" SelectedItem="{Binding SelectedLog, Mode=TwoWay}">
                 <CollectionView.ItemTemplate>
                     <DataTemplate x:DataType="dto:InventoryLogDTO">
                         <VerticalStackLayout Padding="8" Spacing="4">
