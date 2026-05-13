@@ -4,92 +4,174 @@
              xmlns:vm="clr-namespace:TicketInventoryManager.ViewModels"
              x:DataType="vm:InventoryLogDetailsViewModel"
              x:Class="TicketInventoryManager.Views.InventoryLogDetailsPage"
-             Title="Log Details">
+             BackgroundColor="{StaticResource AppBackground}">
+
+    <ContentPage.Resources>
+        <Style x:Key="FieldLabel" TargetType="Label">
+            <Setter Property="FontSize" Value="11" />
+            <Setter Property="TextColor" Value="{StaticResource AppTextMuted}" />
+            <Setter Property="Margin" Value="0,0,0,4" />
+        </Style>
+        <Style x:Key="FieldBorder" TargetType="Border">
+            <Setter Property="Stroke" Value="{StaticResource AppBorder}" />
+            <Setter Property="StrokeThickness" Value="1" />
+            <Setter Property="StrokeShape" Value="RoundRectangle 8" />
+            <Setter Property="BackgroundColor" Value="{StaticResource AppSurfaceRaised}" />
+            <Setter Property="Margin" Value="0,0,0,14" />
+        </Style>
+        <Style x:Key="SectionCard" TargetType="Border">
+            <Setter Property="BackgroundColor" Value="{StaticResource AppSurface}" />
+            <Setter Property="Stroke" Value="{StaticResource AppBorder}" />
+            <Setter Property="StrokeThickness" Value="1" />
+            <Setter Property="StrokeShape" Value="RoundRectangle 10" />
+            <Setter Property="Padding" Value="20" />
+            <Setter Property="Margin" Value="0,0,0,12" />
+        </Style>
+        <Style x:Key="SectionTitle" TargetType="Label">
+            <Setter Property="FontSize" Value="11" />
+            <Setter Property="TextColor" Value="{StaticResource AppTextMuted}" />
+            <Setter Property="CharacterSpacing" Value="2" />
+            <Setter Property="Margin" Value="0,0,0,16" />
+        </Style>
+    </ContentPage.Resources>
 
     <ScrollView>
-        <VerticalStackLayout Padding="16" Spacing="16">
+        <VerticalStackLayout Padding="24" Spacing="0">
+
+            <!-- Page header -->
+            <Label Text="Log Details"
+                   FontSize="22"
+                   FontAttributes="Bold"
+                   TextColor="{StaticResource AppTextPrimary}"
+                   Margin="0,0,0,20" />
 
             <!-- Event -->
-            <VerticalStackLayout Spacing="4">
-                <Label Text="Event" FontAttributes="Bold" />
-                <Picker ItemsSource="{Binding Events}"
-                        SelectedItem="{Binding SelectedEvent}"
-                        ItemDisplayBinding="{Binding DisplayName}"
-                        Title="Select an event" />
-            </VerticalStackLayout>
+            <Border Style="{StaticResource SectionCard}">
+                <VerticalStackLayout>
+                    <Label Text="EVENT" Style="{StaticResource SectionTitle}" />
+                    <Label Text="Event" Style="{StaticResource FieldLabel}" />
+                    <Border Style="{StaticResource FieldBorder}" Margin="0,0,0,0">
+                        <Picker ItemsSource="{Binding Events}"
+                                SelectedItem="{Binding SelectedEvent}"
+                                ItemDisplayBinding="{Binding DisplayName}"
+                                Title="Select an event"
+                                Margin="4,0" />
+                    </Border>
+                </VerticalStackLayout>
+            </Border>
 
             <!-- Buy info -->
-            <VerticalStackLayout Spacing="4">
-                <Label Text="Buy Info" FontAttributes="Bold" />
+            <Border Style="{StaticResource SectionCard}">
+                <VerticalStackLayout>
+                    <Label Text="BUY INFO" Style="{StaticResource SectionTitle}" />
 
-                <HorizontalStackLayout Spacing="8">
-                    <Label Text="Buy date:" VerticalOptions="Center" />
-                    <DatePicker Date="{Binding BuyDate}" />
-                </HorizontalStackLayout>
+                    <Label Text="Buy date" Style="{StaticResource FieldLabel}" />
+                    <Border Style="{StaticResource FieldBorder}">
+                        <DatePicker Date="{Binding BuyDate}" Margin="4,0" />
+                    </Border>
 
-                <HorizontalStackLayout Spacing="8">
-                    <Label Text="Sector:" VerticalOptions="Center" />
-                    <Entry Text="{Binding Sector}" Placeholder="e.g. Floor, Block A" />
-                </HorizontalStackLayout>
+                    <Grid ColumnDefinitions="*, *" ColumnSpacing="12">
+                        <VerticalStackLayout Grid.Column="0">
+                            <Label Text="Sector" Style="{StaticResource FieldLabel}" />
+                            <Border Style="{StaticResource FieldBorder}">
+                                <Entry Text="{Binding Sector, Mode=TwoWay}" Placeholder="e.g. Floor, Block A" Margin="4,0" />
+                            </Border>
+                        </VerticalStackLayout>
+                        <VerticalStackLayout Grid.Column="1">
+                            <Label Text="Quantity" Style="{StaticResource FieldLabel}" />
+                            <Border Style="{StaticResource FieldBorder}">
+                                <Entry Text="{Binding Quantity, Mode=TwoWay}" Keyboard="Numeric" Margin="4,0" />
+                            </Border>
+                        </VerticalStackLayout>
+                    </Grid>
 
-                <HorizontalStackLayout Spacing="8">
-                    <Label Text="Quantity:" VerticalOptions="Center" />
-                    <Entry Text="{Binding Quantity}" Keyboard="Numeric" />
-                </HorizontalStackLayout>
+                    <Grid ColumnDefinitions="*, *" ColumnSpacing="12">
+                        <VerticalStackLayout Grid.Column="0">
+                            <Label Text="Buy price per ticket" Style="{StaticResource FieldLabel}" />
+                            <Border Style="{StaticResource FieldBorder}">
+                                <Entry Text="{Binding BuyPerOne, Mode=TwoWay}" Keyboard="Numeric" Placeholder="€" Margin="4,0" />
+                            </Border>
+                        </VerticalStackLayout>
+                        <VerticalStackLayout Grid.Column="1">
+                            <Label Text="Buy platform" Style="{StaticResource FieldLabel}" />
+                            <Border Style="{StaticResource FieldBorder}">
+                                <Entry Text="{Binding BuyPlatform, Mode=TwoWay}" Placeholder="e.g. Ticketmaster" Margin="4,0" />
+                            </Border>
+                        </VerticalStackLayout>
+                    </Grid>
 
-                <HorizontalStackLayout Spacing="8">
-                    <Label Text="Buy price per ticket:" VerticalOptions="Center" />
-                    <Entry Text="{Binding BuyPerOne}" Keyboard="Numeric" Placeholder="€" />
-                </HorizontalStackLayout>
+                    <Label Text="Account email" Style="{StaticResource FieldLabel}" />
+                    <Border Stroke="{StaticResource AppBorder}"
+                            StrokeThickness="1"
+                            StrokeShape="RoundRectangle 8"
+                            BackgroundColor="{StaticResource AppSurfaceRaised}">
+                        <Entry Text="{Binding AccountEmail, Mode=TwoWay}" Keyboard="Email" Margin="4,0" />
+                    </Border>
+                </VerticalStackLayout>
+            </Border>
 
-                <HorizontalStackLayout Spacing="8">
-                    <Label Text="Buy platform:" VerticalOptions="Center" />
-                    <Entry Text="{Binding BuyPlatform}" Placeholder="e.g. Ticketmaster" />
-                </HorizontalStackLayout>
+            <!-- Status + Sold -->
+            <Border Style="{StaticResource SectionCard}">
+                <VerticalStackLayout>
+                    <Label Text="STATUS" Style="{StaticResource SectionTitle}" />
 
-                <HorizontalStackLayout Spacing="8">
-                    <Label Text="Account email:" VerticalOptions="Center" />
-                    <Entry Text="{Binding AccountEmail}" Keyboard="Email" />
-                </HorizontalStackLayout>
-            </VerticalStackLayout>
+                    <Label Text="Status" Style="{StaticResource FieldLabel}" />
+                    <Border Style="{StaticResource FieldBorder}">
+                        <Picker ItemsSource="{Binding Statuses}" SelectedItem="{Binding Status}" Margin="4,0" />
+                    </Border>
 
-            <!-- Status -->
-            <VerticalStackLayout Spacing="4">
-                <Label Text="Status" FontAttributes="Bold" />
-                <Picker ItemsSource="{Binding Statuses}"
-                        SelectedItem="{Binding Status}" />
-            </VerticalStackLayout>
+                    <Grid ColumnDefinitions="*, Auto" Margin="0,4,0,0">
+                        <Label Grid.Column="0"
+                               Text="Sold"
+                               FontSize="14"
+                               TextColor="{StaticResource AppTextPrimary}"
+                               VerticalOptions="Center" />
+                        <Switch Grid.Column="1" IsToggled="{Binding IsSold}" OnColor="{StaticResource AppAccent}" />
+                    </Grid>
+                </VerticalStackLayout>
+            </Border>
 
-            <!-- Sold toggle -->
-            <HorizontalStackLayout Spacing="8">
-                <Label Text="Sold" VerticalOptions="Center" />
-                <Switch IsToggled="{Binding IsSold}" />
-            </HorizontalStackLayout>
+            <!-- Sell info -->
+            <Border Style="{StaticResource SectionCard}" IsVisible="{Binding IsSold}">
+                <VerticalStackLayout>
+                    <Label Text="SELL INFO" Style="{StaticResource SectionTitle}" />
 
-            <!-- Sell info — visible only when sold -->
-            <VerticalStackLayout Spacing="4" IsVisible="{Binding IsSold}">
-                <Label Text="Sell Info" FontAttributes="Bold" />
+                    <Label Text="Sell date" Style="{StaticResource FieldLabel}" />
+                    <Border Style="{StaticResource FieldBorder}">
+                        <DatePicker Date="{Binding SellDate}" Margin="4,0" />
+                    </Border>
 
-                <HorizontalStackLayout Spacing="8">
-                    <Label Text="Sell date:" VerticalOptions="Center" />
-                    <DatePicker Date="{Binding SellDate}" />
-                </HorizontalStackLayout>
-
-                <HorizontalStackLayout Spacing="8">
-                    <Label Text="Sell price per ticket:" VerticalOptions="Center" />
-                    <Entry Text="{Binding SellPerOne, Mode=TwoWay}" Keyboard="Numeric" Placeholder="€" />
-                </HorizontalStackLayout>
-
-                <HorizontalStackLayout Spacing="8">
-                    <Label Text="Sell platform:" VerticalOptions="Center" />
-                    <Entry Text="{Binding SellPlatform}" Placeholder="e.g. Viagogo" />
-                </HorizontalStackLayout>
-            </VerticalStackLayout>
+                    <Grid ColumnDefinitions="*, *" ColumnSpacing="12">
+                        <VerticalStackLayout Grid.Column="0">
+                            <Label Text="Sell price per ticket" Style="{StaticResource FieldLabel}" />
+                            <Border Style="{StaticResource FieldBorder}">
+                                <Entry Text="{Binding SellPerOne, Mode=TwoWay}" Keyboard="Numeric" Placeholder="€" Margin="4,0" />
+                            </Border>
+                        </VerticalStackLayout>
+                        <VerticalStackLayout Grid.Column="1">
+                            <Label Text="Sell platform" Style="{StaticResource FieldLabel}" />
+                            <Border Style="{StaticResource FieldBorder}">
+                                <Entry Text="{Binding SellPlatform, Mode=TwoWay}" Placeholder="e.g. Viagogo" Margin="4,0" />
+                            </Border>
+                        </VerticalStackLayout>
+                    </Grid>
+                </VerticalStackLayout>
+            </Border>
 
             <!-- Actions -->
-            <Button Text="Save" Command="{Binding SaveCommand}" />
-            <Button Text="Delete" Command="{Binding DeleteCommand}"
-                    IsVisible="{Binding IsExistingLog}" />
+            <Button Text="Save"
+                    Command="{Binding SaveCommand}"
+                    HeightRequest="52"
+                    FontAttributes="Bold"
+                    Margin="0,8,0,8" />
+            <Button Text="Delete"
+                    Command="{Binding DeleteCommand}"
+                    IsVisible="{Binding IsExistingLog}"
+                    BackgroundColor="Transparent"
+                    TextColor="{StaticResource AppAccent}"
+                    BorderColor="{StaticResource AppAccent}"
+                    BorderWidth="1"
+                    HeightRequest="48" />
 
         </VerticalStackLayout>
     </ScrollView>
