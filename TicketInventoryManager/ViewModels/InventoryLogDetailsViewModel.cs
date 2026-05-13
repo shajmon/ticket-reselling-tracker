@@ -14,7 +14,9 @@ namespace TicketInventoryManager.ViewModels
         private readonly ISessionService _sessionService;
         private readonly IEventService _eventService;
 
-        public int LogId { get; set; }
+        [ObservableProperty]
+        [NotifyPropertyChangedFor(nameof(IsExistingLog))]
+        public partial int LogId { get; set; }
         public bool IsExistingLog => LogId != 0;
         public IList<ItemStatus> Statuses { get; } = Enum.GetValues<ItemStatus>().ToList();
 
