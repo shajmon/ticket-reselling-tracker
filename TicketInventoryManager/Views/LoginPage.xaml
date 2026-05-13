@@ -41,7 +41,7 @@
 
                 <!-- Title -->
                 <Label Text="ticket inventory manager"
-                       FontSize="12"
+                       FontSize="20"
                        TextColor="{StaticResource AppTextMuted}"
                        HorizontalOptions="Center"
                        Margin="0,0,0,32" />
