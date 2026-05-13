@@ -4,16 +4,127 @@
              xmlns:vm="clr-namespace:TicketInventoryManager.ViewModels"
              x:DataType="vm:LoginViewModel"
              x:Class="TicketInventoryManager.Views.LoginPage"
-             Title="LoginPage">
-    <VerticalStackLayout>
-        <Label IsVisible="{Binding HasLoginError}" Text="{Binding LoginError}"/>
-        <Label IsVisible="{Binding HasRegistrationError}" Text="{Binding RegistrationError}"/>
-        <Entry Placeholder="Username" Text="{Binding Username}"/>
-        <Entry Placeholder="Password" Text="{Binding Password}"/>
-        <Button IsVisible="{Binding IsLoggingIn}" Text="Login" Command="{Binding TryLoginCommand}"/>
-        <Entry IsVisible="{Binding IsRegistering}" Placeholder="Repeat password" Text="{Binding RepeatPassword}"/>
-        <Button IsVisible="{Binding IsRegistering}" Text="Register" Command="{Binding RegisterNewUserCommand}"/>
-        <Button IsVisible="{Binding IsLoggingIn}" Text="Don't have an account?" Command="{Binding ChangeModeCommand}"/>
-        <Button IsVisible="{Binding IsRegistering}" Text="Already have an account?" Command="{Binding ChangeModeCommand}"/>
-    </VerticalStackLayout>
+             BackgroundColor="{StaticResource AppBackground}">
+
+    <ContentPage.Resources>
+        <Style x:Key="GhostButton" TargetType="Button">
+            <Setter Property="BackgroundColor" Value="Transparent" />
+            <Setter Property="TextColor" Value="{StaticResource AppTextMuted}" />
+            <Setter Property="FontSize" Value="13" />
+            <Setter Property="VisualStateManager.VisualStateGroups">
+                <VisualStateGroupList>
+                    <VisualStateGroup x:Name="CommonStates">
+                        <VisualState x:Name="Normal" />
+                        <VisualState x:Name="PointerOver">
+                            <VisualState.Setters>
+                                <Setter Property="TextColor" Value="{StaticResource AppTextPrimary}" />
+                            </VisualState.Setters>
+                        </VisualState>
+                    </VisualStateGroup>
+                </VisualStateGroupList>
+            </Setter>
+        </Style>
+    </ContentPage.Resources>
+
+    <Grid RowDefinitions="*, Auto, *">
+
+        <Border Grid.Row="1"
+                BackgroundColor="{StaticResource AppSurface}"
+                Stroke="{StaticResource AppBorder}"
+                StrokeThickness="1"
+                StrokeShape="RoundRectangle 12"
+                Padding="32"
+                MaximumWidthRequest="420"
+                HorizontalOptions="Center">
+
+            <VerticalStackLayout Spacing="0">
+
+                <!-- Title -->
+                <Label Text="ticket inventory manager"
+                       FontSize="12"
+                       TextColor="{StaticResource AppTextMuted}"
+                       HorizontalOptions="Center"
+                       Margin="0,0,0,32" />
+
+                <!-- Errors -->
+                <Label IsVisible="{Binding HasLoginError}"
+                       Text="{Binding LoginError}"
+                       TextColor="{StaticResource AppAccent}"
+                       FontSize="13"
+                       Margin="0,0,0,12" />
+                <Label IsVisible="{Binding HasRegistrationError}"
+                       Text="{Binding RegistrationError}"
+                       TextColor="{StaticResource AppAccent}"
+                       FontSize="13"
+                       Margin="0,0,0,12" />
+
+                <!-- Username -->
+                <Border Stroke="{StaticResource AppBorder}"
+                        StrokeThickness="1"
+                        StrokeShape="RoundRectangle 8"
+                        BackgroundColor="{StaticResource AppSurfaceRaised}"
+                        Margin="0,0,0,12">
+                    <Entry Placeholder="Username"
+                           Text="{Binding Username}"
+                           Margin="4,0" />
+                </Border>
+
+                <!-- Password -->
+                <Border Stroke="{StaticResource AppBorder}"
+                        StrokeThickness="1"
+                        StrokeShape="RoundRectangle 8"
+                        BackgroundColor="{StaticResource AppSurfaceRaised}"
+                        Margin="0,0,0,12">
+                    <Entry Placeholder="Password"
+                           Text="{Binding Password}"
+                           IsPassword="True"
+                           Margin="4,0" />
+                </Border>
+
+                <!-- Repeat password (register only) -->
+                <Border IsVisible="{Binding IsRegistering}"
+                        Stroke="{StaticResource AppBorder}"
+                        StrokeThickness="1"
+                        StrokeShape="RoundRectangle 8"
+                        BackgroundColor="{StaticResource AppSurfaceRaised}"
+                        Margin="0,0,0,20">
+                    <Entry Placeholder="Repeat password"
+                           Text="{Binding RepeatPassword}"
+                           IsPassword="True"
+                           Margin="4,0" />
+                </Border>
+
+                <BoxView IsVisible="{Binding IsLoggingIn}"
+                         HeightRequest="8"
+                         BackgroundColor="Transparent" />
+
+                <!-- Primary action -->
+                <Button IsVisible="{Binding IsLoggingIn}"
+                        Text="Log in"
+                        Command="{Binding TryLoginCommand}"
+                        HeightRequest="52"
+                        FontAttributes="Bold"
+                        Margin="0,0,0,4" />
+                <Button IsVisible="{Binding IsRegistering}"
+                        Text="Create account"
+                        Command="{Binding RegisterNewUserCommand}"
+                        HeightRequest="52"
+                        FontAttributes="Bold"
+                        Margin="0,0,0,4" />
+
+                <!-- Mode switch -->
+                <Button IsVisible="{Binding IsLoggingIn}"
+                        Text="Don't have an account? Sign up"
+                        Command="{Binding ChangeModeCommand}"
+                        Style="{StaticResource GhostButton}" />
+                <Button IsVisible="{Binding IsRegistering}"
+                        Text="Already have an account? Log in"
+                        Command="{Binding ChangeModeCommand}"
+                        Style="{StaticResource GhostButton}" />
+
+            </VerticalStackLayout>
+        </Border>
+
+    </Grid>
+
 </ContentPage>
