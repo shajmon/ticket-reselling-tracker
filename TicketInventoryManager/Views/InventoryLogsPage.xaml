@@ -10,6 +10,27 @@
     <ScrollView>
         <VerticalStackLayout Padding="16" Spacing="16">
 
+            <!-- Status filters -->
+            <HorizontalStackLayout Spacing="16">
+                <Label Text="Status:" VerticalOptions="Center" />
+                <HorizontalStackLayout Spacing="8">
+                    <CheckBox IsChecked="{Binding IsNotListedSelected}" />
+                    <Label Text="Not Listed" VerticalOptions="Center" />
+                </HorizontalStackLayout>
+                <HorizontalStackLayout Spacing="8">
+                    <CheckBox IsChecked="{Binding IsListedSelected}" />
+                    <Label Text="Listed" VerticalOptions="Center" />
+                </HorizontalStackLayout>
+                <HorizontalStackLayout Spacing="8">
+                    <CheckBox IsChecked="{Binding IsToDeliverSelected}" />
+                    <Label Text="To Deliver" VerticalOptions="Center" />
+                </HorizontalStackLayout>
+                <HorizontalStackLayout Spacing="8">
+                    <CheckBox IsChecked="{Binding IsDeliveredSelected}" />
+                    <Label Text="Delivered" VerticalOptions="Center" />
+                </HorizontalStackLayout>
+            </HorizontalStackLayout>
+
             <CollectionView ItemsSource="{Binding Logs}">
                 <CollectionView.ItemTemplate>
                     <DataTemplate x:DataType="dto:InventoryLogDTO">
@@ -27,8 +48,10 @@
                                 <Label Text="{Binding Quantity}" />
                                 <Label Text="Buy:" />
                                 <Label Text="{Binding BuyPerOne, StringFormat='€{0:N2}'}" />
+                                <Label Text="Sell:" />
+                                <Label Text="{Binding SellPerOne, StringFormat='€{0:N2}', TargetNullValue=''}" />
                                 <Label Text="Profit:" />
-                                <Label Text="{Binding Profit, StringFormat='€{0:N2}'}" />
+                                <Label Text="{Binding Profit, StringFormat='€{0:N2}', TargetNullValue=''}" />
                             </HorizontalStackLayout>
 
                         </VerticalStackLayout>
