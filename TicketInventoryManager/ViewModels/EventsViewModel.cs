@@ -48,5 +48,11 @@ namespace TicketInventoryManager.ViewModels
         {
             await Shell.Current.GoToAsync("eventdetail");
         }
+
+        [RelayCommand]
+        private async Task GoToDashboard()
+        {
+            await Shell.Current.GoToAsync("//dashboard");
+        }
     }
 }

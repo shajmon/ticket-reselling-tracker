@@ -11,6 +11,7 @@
         <VerticalStackLayout Padding="16" Spacing="16">
 
             <Button Text="Add new" Command="{Binding NewEventCommand}" />
+            <Button Text="Back to Dashboard" Command="{Binding GoToDashboardCommand}"/>
 
             <CollectionView ItemsSource="{Binding Events}"
                             SelectionMode="Single"
