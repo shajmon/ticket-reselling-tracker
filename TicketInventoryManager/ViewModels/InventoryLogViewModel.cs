@@ -103,6 +103,12 @@ namespace TicketInventoryManager.ViewModels
             await Shell.Current.GoToAsync("logdetail");
         }
 
+        [RelayCommand]
+        private async Task GoToDashboard()
+        {
+            await Shell.Current.GoToAsync("//dashboard");
+        }
+
         private async Task LoadLogsAsync()
         {
             Logs = new ObservableCollection<InventoryLogDTO>(
