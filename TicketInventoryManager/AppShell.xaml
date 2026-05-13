@@ -10,5 +10,6 @@
     <ShellContent Route="login" Shell.NavBarIsVisible="False" Shell.TabBarIsVisible="False" Shell.FlyoutItemIsVisible="False" ContentTemplate="{DataTemplate views:LoginPage}"/>
     <ShellContent Route="dashboard" Shell.NavBarIsVisible="False" Shell.TabBarIsVisible="False" Shell.FlyoutItemIsVisible="False" ContentTemplate="{DataTemplate views:DashboardPage}"/>
     <ShellContent Route="inventory" Shell.NavBarIsVisible="False" Shell.TabBarIsVisible="False" Shell.FlyoutItemIsVisible="False" ContentTemplate="{DataTemplate views:InventoryLogsPage}"/>
+    <ShellContent Route="events" Shell.NavBarIsVisible="False" Shell.TabBarIsVisible="False" Shell.FlyoutItemIsVisible="False" ContentTemplate="{DataTemplate views:EventsPage}"/>
 
 </Shell>
