@@ -1,4 +1,5 @@
-﻿using DAL;
+﻿using CommunityToolkit.Maui;
+using DAL;
 using Microsoft.EntityFrameworkCore.Query.SqlExpressions;
 using Microsoft.Extensions.Logging;
 using TicketInventoryManager.Services;
@@ -12,6 +13,7 @@ namespace TicketInventoryManager
             var builder = MauiApp.CreateBuilder();
             builder
                 .UseMauiApp<App>()
+                .UseMauiCommunityToolkit()
                 .ConfigureFonts(fonts =>
                 {
                     fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
