@@ -10,9 +10,9 @@ public partial class InventoryLogsPage : ContentPage
 		BindingContext = vm;
 	}
 
-	protected override async void OnNavigatedTo(NavigatedToEventArgs args)
+	protected override async void OnAppearing()
 	{
-		base.OnNavigatedTo(args);
+		base.OnAppearing();
 		await ((InventoryLogViewModel)BindingContext).InitCommand.ExecuteAsync(null);
 	}
 }

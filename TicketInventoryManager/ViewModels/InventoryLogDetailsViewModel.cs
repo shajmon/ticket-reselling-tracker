@@ -41,13 +41,13 @@ namespace TicketInventoryManager.ViewModels
         public partial string Sector { get; set; } = string.Empty;
 
         [ObservableProperty]
-        public partial int Quantity { get; set; } = 1;
+        public partial string Quantity { get; set; } = "1";
 
         [ObservableProperty]
-        public partial decimal BuyPerOne { get; set; }
+        public partial string BuyPerOne { get; set; } = string.Empty;
 
         [ObservableProperty]
-        public partial decimal SellPerOne { get; set; }
+        public partial string SellPerOne { get; set; } = string.Empty;
 
         [ObservableProperty]
         public partial string BuyPlatform { get; set; } = string.Empty;
@@ -83,9 +83,9 @@ namespace TicketInventoryManager.ViewModels
                 IsSold = log.SellDate.HasValue;
                 SellDate = log.SellDate ?? DateTime.Today;
                 Sector = log.Sector;
-                Quantity = log.Quantity;
-                BuyPerOne = log.BuyPerOne;
-                SellPerOne = log.SellPerOne ?? 0;
+                Quantity = log.Quantity.ToString();
+                BuyPerOne = log.BuyPerOne.ToString();
+                SellPerOne = (log.SellPerOne ?? 0).ToString();
                 BuyPlatform = log.BuyPlatform;
                 AccountEmail = log.AccountEmail;
                 SellPlatform = log.SellPlatform;
@@ -121,9 +121,9 @@ namespace TicketInventoryManager.ViewModels
                 BuyDate = BuyDate,
                 SellDate = IsSold ? SellDate : null,
                 Sector = Sector,
-                Quantity = Quantity,
-                BuyPerOne = BuyPerOne,
-                SellPerOne = IsSold ? SellPerOne : null,
+                Quantity = int.TryParse(Quantity, out var qty) ? qty : 0,
+                BuyPerOne = decimal.TryParse(BuyPerOne, out var buy) ? buy : 0,
+                SellPerOne = IsSold && decimal.TryParse(SellPerOne, out var sell) ? sell : null,
                 BuyPlatform = BuyPlatform,
                 AccountEmail = AccountEmail,
                 SellPlatform = SellPlatform,

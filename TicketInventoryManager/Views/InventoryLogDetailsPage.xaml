@@ -77,7 +77,7 @@
 
                 <HorizontalStackLayout Spacing="8">
                     <Label Text="Sell price per ticket:" VerticalOptions="Center" />
-                    <Entry Text="{Binding SellPerOne}" Keyboard="Numeric" Placeholder="€" />
+                    <Entry Text="{Binding SellPerOne, Mode=TwoWay}" Keyboard="Numeric" Placeholder="€" />
                 </HorizontalStackLayout>
 
                 <HorizontalStackLayout Spacing="8">
