@@ -8,6 +8,7 @@ namespace TicketInventoryManager
         {
             InitializeComponent();
             Routing.RegisterRoute("logdetail", typeof(InventoryLogDetailsPage));
+            Routing.RegisterRoute("eventdetail", typeof(EventDetailsPage));
         }
     }
 }
