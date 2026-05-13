@@ -29,10 +29,12 @@ namespace TicketInventoryManager
             builder.Services.AddTransient<Views.LoginPage>();
             builder.Services.AddTransient<Views.DashboardPage>();
             builder.Services.AddTransient<Views.InventoryLogsPage>();
+            builder.Services.AddTransient<Views.InventoryLogDetailsPage>();
 
             builder.Services.AddTransient<ViewModels.LoginViewModel>();
             builder.Services.AddTransient<ViewModels.DashboardViewModel>();
             builder.Services.AddTransient<ViewModels.InventoryLogViewModel>();
+            builder.Services.AddTransient<ViewModels.InventoryLogDetailsViewModel>();
 
 #if DEBUG
     		builder.Logging.AddDebug();
