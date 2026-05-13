@@ -27,6 +27,7 @@ namespace TicketInventoryManager
             builder.Services.AddTransient<IUserService, UserService>();
             builder.Services.AddTransient<IInventoryLogService, InventoryLogService>();
             builder.Services.AddSingleton<ISessionService, SessionService>();
+            builder.Services.AddTransient<IFileService, JsonFileService>();
 
             builder.Services.AddTransient<Views.LoginPage>();
             builder.Services.AddTransient<Views.DashboardPage>();

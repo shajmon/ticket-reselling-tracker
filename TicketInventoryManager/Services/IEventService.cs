@@ -12,5 +12,6 @@ namespace TicketInventoryManager.Services
         Task AddAsync(EventDTO eventToAdd);
         Task UpdateAsync(EventDTO eventToUpdate);
         Task DeleteAsync(int id);
+        Task ImportAsync(IEnumerable<EventDTO> events);
     }
 }

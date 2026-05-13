@@ -9,12 +9,15 @@ namespace TicketInventoryManager.ViewModels
     public partial class EventsViewModel : ObservableObject
     {
         private readonly IEventService _eventService;
+        private readonly IFileService _fileService;
+
         [ObservableProperty]
         public partial ObservableCollection<EventDTO> Events { get; set; } = [];
 
-        public EventsViewModel(IEventService eventService)
+        public EventsViewModel(IEventService eventService, IFileService fileService)
         {
             _eventService = eventService;
+            _fileService = fileService;
         }
 
         private EventDTO? _selectedEvent;
@@ -53,6 +56,30 @@ namespace TicketInventoryManager.ViewModels
         private async Task GoToDashboard()
         {
             await Shell.Current.GoToAsync("//dashboard");
+        }
+
+        [RelayCommand]
+        private async Task ExportEvents()
+        {
+            if (!(await _fileService.ExportEventsAsync(Events)))
+            {
+                await Application.Current!.Windows[0].Page!.DisplayAlertAsync("Export Error", "Failed to export events", "OK");
+            }
+        }
+
+        [RelayCommand]
+        private async Task ImportEvents()
+        {
+            var toImport = await _fileService.ImportEventsAsync();
+            if (toImport == null)
+            {
+                await Application.Current!.Windows[0].Page!.DisplayAlertAsync("Import Error", "Failed to import events", "OK");
+            }
+            else
+            {
+                await _eventService.ImportAsync(toImport);
+                Events = new ObservableCollection<EventDTO>(await _eventService.GetAllAsync());
+            }
         }
     }
 }

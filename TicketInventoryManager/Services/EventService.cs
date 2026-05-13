@@ -59,6 +59,21 @@ namespace TicketInventoryManager.Services
             await _context.SaveChangesAsync();
         }
 
+        public async Task ImportAsync(IEnumerable<EventDTO> events)
+        {
+            foreach (var e in events)
+            {
+                var tryLookup = await _context.Events
+                                    .Where(dbEvent => dbEvent.Name == e.Name && dbEvent.Date == e.Date)
+                                    .FirstOrDefaultAsync();
+                if (tryLookup == null)
+                {
+                    _context.Events.Add(FromDTO(e));
+                }
+            }
+            await _context.SaveChangesAsync();
+        }
+
         private static EventDTO ToDTO(Event eventToMap)
         {
             return new EventDTO
@@ -94,5 +109,7 @@ namespace TicketInventoryManager.Services
             oldLog.Country = newLog.Country;
             oldLog.Date = newLog.Date;
         }
+
+
     }
 }

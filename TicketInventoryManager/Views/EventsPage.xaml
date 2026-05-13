@@ -12,6 +12,8 @@
 
             <Button Text="Add new" Command="{Binding NewEventCommand}" />
             <Button Text="Back to Dashboard" Command="{Binding GoToDashboardCommand}"/>
+            <Button Text="Export Events" Command="{Binding ExportEventsCommand}"/>
+            <Button Text="Import Event" Command="{Binding ImportEventsCommand}"/>
 
             <CollectionView ItemsSource="{Binding Events}"
                             SelectionMode="Single"
