@@ -24,9 +24,17 @@ namespace TicketInventoryManager.Services
             return false;
         }
 
-        public Task<bool> ExportLogsAsync(ObservableCollection<InventoryLogDTO> logs)
+        public async Task<bool> ExportLogsAsync(ObservableCollection<InventoryLogDTO> logs)
         {
-            throw new NotImplementedException();
+            string json = JsonSerializer.Serialize(logs);
+            using var stream = new MemoryStream(Encoding.UTF8.GetBytes(json));
+            try
+            {
+                await FileSaver.Default.SaveAsync("logs_export.json", stream);
+                return true;
+            }
+            catch { }
+            return false;
         }
 
         public async Task<ObservableCollection<EventDTO>?> ImportEventsAsync()
@@ -51,9 +59,23 @@ namespace TicketInventoryManager.Services
             }
         }
 
-        public Task<ObservableCollection<InventoryLogDTO>?> ImportLogsAsync()
+        public async Task<ObservableCollection<InventoryLogDTO>?> ImportLogsAsync()
         {
-            throw new NotImplementedException();
+            var selected = await FilePicker.Default.PickAsync();
+            if (selected == null) return null;
+
+            using var stream = await selected.OpenReadAsync();
+            using var reader = new StreamReader(stream);
+            string json = await reader.ReadToEndAsync();
+
+            try
+            {
+                return JsonSerializer.Deserialize<ObservableCollection<InventoryLogDTO>>(json);
+            }
+            catch
+            {
+                return null;
+            }
         }
     }
 }

@@ -11,6 +11,7 @@ namespace TicketInventoryManager.ViewModels
     {
         private readonly IInventoryLogService _invLogService;
         private readonly ISessionService _sessionService;
+        private readonly IFileService _fileService;
 
         [ObservableProperty]
         public partial ObservableCollection<InventoryLogDTO> Logs { get; set; } = [];
@@ -79,10 +80,11 @@ namespace TicketInventoryManager.ViewModels
             }
         }
 
-        public InventoryLogViewModel(IInventoryLogService invLogService, ISessionService sessionService)
+        public InventoryLogViewModel(IInventoryLogService invLogService, ISessionService sessionService, IFileService fileService)
         {
             _invLogService = invLogService;
             _sessionService = sessionService;
+            _fileService = fileService;
         }
 
         [RelayCommand]
@@ -107,6 +109,29 @@ namespace TicketInventoryManager.ViewModels
         private async Task GoToDashboard()
         {
             await Shell.Current.GoToAsync("//dashboard");
+        }
+
+        [RelayCommand]
+        private async Task ExportLogs()
+        {
+            await _fileService.ExportLogsAsync(Logs);
+        }
+
+        [RelayCommand]
+        private async Task ImportLogs()
+        {
+            var imported = await _fileService.ImportLogsAsync();
+            if (imported == null) return;
+
+            bool replace = await Shell.Current.DisplayAlertAsync(
+                "Import mode",
+                "Do you want to replace your existing logs or append to them?",
+                "Replace",
+                "Append");
+
+            int count = await _invLogService.ImportAsync(imported, _sessionService.CurrentUser!.Id, replace);
+            await LoadLogsAsync();
+            await Shell.Current.DisplayAlertAsync("Import complete", $"{count} log(s) imported.", "OK");
         }
 
         private async Task LoadLogsAsync()

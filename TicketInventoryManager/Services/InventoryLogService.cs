@@ -156,6 +156,45 @@ namespace TicketInventoryManager.Services
             return new DashboardSummary(buysSummary, salesSummary);
         }
 
+        public async Task<int> ImportAsync(IEnumerable<InventoryLogDTO> logs, int userId, bool replace)
+        {
+            if (replace)
+            {
+                var existing = await _context.InventoryLogs
+                    .Where(l => l.UserId == userId)
+                    .ToListAsync();
+                _context.InventoryLogs.RemoveRange(existing);
+            }
+
+            int imported = 0;
+            foreach (var log in logs)
+            {
+                var matchedEvent = await _context.Events
+                    .FirstOrDefaultAsync(e => e.Name == log.EventName && e.Date == log.EventDate);
+                if (matchedEvent == null) continue;
+
+                _context.InventoryLogs.Add(new InventoryLog
+                {
+                    UserId = userId,
+                    EventId = matchedEvent.Id,
+                    BuyDate = log.BuyDate,
+                    SellDate = log.SellDate,
+                    Sector = log.Sector,
+                    Quantity = log.Quantity,
+                    BuyPerOne = log.BuyPerOne,
+                    SellPerOne = log.SellPerOne,
+                    BuyPlatform = log.BuyPlatform,
+                    AccountEmail = log.AccountEmail,
+                    SellPlatform = log.SellPlatform,
+                    Status = log.Status
+                });
+                imported++;
+            }
+
+            await _context.SaveChangesAsync();
+            return imported;
+        }
+
         private static InventoryLogDTO ToDTO(InventoryLog logToMap)
         {
             return new InventoryLogDTO
@@ -215,6 +254,6 @@ namespace TicketInventoryManager.Services
             oldLog.Status = newLog.Status;
         }
 
-        
+
     }
 }

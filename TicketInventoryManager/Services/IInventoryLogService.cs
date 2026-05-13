@@ -13,5 +13,6 @@ namespace TicketInventoryManager.Services
         Task UpdateAsync(InventoryLogDTO log);
         Task DeleteAsync(int id);
         Task<DashboardSummary> GetSummaryAsync(int userId, DateTime from, DateTime to, int? eventId = null);
+        Task<int> ImportAsync(IEnumerable<InventoryLogDTO> logs, int userId, bool replace);
     }
 }

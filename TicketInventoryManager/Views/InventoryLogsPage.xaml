@@ -11,6 +11,8 @@
         <VerticalStackLayout Padding="16" Spacing="16">
             <Button Text="Add new" Command="{Binding NewLogCommand}"/>
             <Button Text="Back to Dashboard" Command="{Binding GoToDashboardCommand}"/>
+            <Button Text="Export" Command="{Binding ExportLogsCommand}"/>
+            <Button Text="Import" Command="{Binding ImportLogsCommand}"/>
 
             <!-- Status filters -->
             <HorizontalStackLayout Spacing="16">
