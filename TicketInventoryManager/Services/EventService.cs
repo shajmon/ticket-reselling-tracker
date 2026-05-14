@@ -1,9 +1,6 @@
-﻿using DAL;
+using DAL;
 using DAL.Entities;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Text;
 using TicketInventoryManager.Models.Entities;
 
 namespace TicketInventoryManager.Services
@@ -19,59 +16,64 @@ namespace TicketInventoryManager.Services
 
         public async Task AddAsync(EventDTO eventToAdd)
         {
-            var eventEntity = FromDTO(eventToAdd);
-            _context.Events.Add(eventEntity);
-            await _context.SaveChangesAsync();
+            await Task.Run(() =>
+            {
+                _context.Events.Add(FromDTO(eventToAdd));
+                _context.SaveChanges();
+            });
         }
 
         public async Task DeleteAsync(int id)
         {
-            var toDelete = await _context.Events.FindAsync(id);
-            if (toDelete == null)
+            await Task.Run(() =>
             {
-                return;
-            }
-            _context.Events.Remove(toDelete);
-            await _context.SaveChangesAsync();
+                var toDelete = _context.Events.Find(id);
+                if (toDelete == null) return;
+                _context.Events.Remove(toDelete);
+                _context.SaveChanges();
+            });
         }
 
         public async Task<IEnumerable<EventDTO>> GetAllAsync()
         {
-            return await _context.Events
+            return await Task.Run(() => _context.Events
                 .Select(currentEvent => ToDTO(currentEvent))
-                .ToListAsync();
+                .ToList());
         }
 
         public async Task<EventDTO?> GetByIdAsync(int id)
         {
-            var target = await _context.Events.FindAsync(id);
-            return target == null ? null : ToDTO(target);
+            return await Task.Run(() =>
+            {
+                var target = _context.Events.Find(id);
+                return target == null ? null : ToDTO(target);
+            });
         }
 
-        public async Task UpdateAsync(EventDTO newLog)
+        public async Task UpdateAsync(EventDTO newEvent)
         {
-            var oldLog = await _context.Events.FindAsync(newLog.Id);
-            if (oldLog == null)
+            await Task.Run(() =>
             {
-                throw new KeyNotFoundException("ID does not exist in the database");
-            }
-            UpdateEntity(newLog, oldLog);
-            await _context.SaveChangesAsync();
+                var oldEvent = _context.Events.Find(newEvent.Id)
+                    ?? throw new KeyNotFoundException("ID does not exist in the database");
+                UpdateEntity(newEvent, oldEvent);
+                _context.SaveChanges();
+            });
         }
 
         public async Task ImportAsync(IEnumerable<EventDTO> events)
         {
-            foreach (var e in events)
+            await Task.Run(() =>
             {
-                var tryLookup = await _context.Events
-                                    .Where(dbEvent => dbEvent.Name == e.Name && dbEvent.Date == e.Date)
-                                    .FirstOrDefaultAsync();
-                if (tryLookup == null)
+                foreach (var e in events)
                 {
-                    _context.Events.Add(FromDTO(e));
+                    var exists = _context.Events
+                        .Any(dbEvent => dbEvent.Name == e.Name && dbEvent.Date == e.Date);
+                    if (!exists)
+                        _context.Events.Add(FromDTO(e));
                 }
-            }
-            await _context.SaveChangesAsync();
+                _context.SaveChanges();
+            });
         }
 
         private static EventDTO ToDTO(Event eventToMap)
@@ -101,15 +103,13 @@ namespace TicketInventoryManager.Services
             };
         }
 
-        private static void UpdateEntity(EventDTO newLog, Event oldLog)
+        private static void UpdateEntity(EventDTO newEvent, Event oldEvent)
         {
-            oldLog.Name = newLog.Name;
-            oldLog.VenueName = newLog.VenueName;
-            oldLog.City = newLog.City;
-            oldLog.Country = newLog.Country;
-            oldLog.Date = newLog.Date;
+            oldEvent.Name = newEvent.Name;
+            oldEvent.VenueName = newEvent.VenueName;
+            oldEvent.City = newEvent.City;
+            oldEvent.Country = newEvent.Country;
+            oldEvent.Date = newEvent.Date;
         }
-
-
     }
 }

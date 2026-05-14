@@ -1,11 +1,7 @@
-﻿using DAL;
+using DAL;
 using DAL.Entities;
 using DAL.Enums;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Logging;
-using System;
-using System.Collections.Generic;
-using System.Text;
 using TicketInventoryManager.Models.DataSummary;
 using TicketInventoryManager.Models.Entities;
 
@@ -21,178 +17,188 @@ namespace TicketInventoryManager.Services
 
         public async Task AddAsync(InventoryLogDTO log)
         {
-            _context.InventoryLogs.Add(FromDTO(log));
-            await _context.SaveChangesAsync();
+            await Task.Run(() =>
+            {
+                _context.InventoryLogs.Add(FromDTO(log));
+                _context.SaveChanges();
+            });
         }
 
         public async Task DeleteAsync(int id)
         {
-            var toDelete = await _context.InventoryLogs.FindAsync(id);
-            if (toDelete == null)
+            await Task.Run(() =>
             {
-                return;
-            }
-            _context.InventoryLogs.Remove(toDelete);
-            await _context.SaveChangesAsync();
+                var toDelete = _context.InventoryLogs.Find(id);
+                if (toDelete == null) return;
+                _context.InventoryLogs.Remove(toDelete);
+                _context.SaveChanges();
+            });
         }
 
         public async Task<IEnumerable<InventoryLogDTO>> GetAllByUserAsync(int userId)
         {
-            return await _context.InventoryLogs
+            return await Task.Run(() => _context.InventoryLogs
                 .Where(log => log.UserId == userId)
                 .Include(log => log.Event)
                 .Select(log => ToDTO(log))
-                .ToListAsync();
+                .ToList());
         }
 
         public async Task<IEnumerable<InventoryLogDTO>> GetAllByUserAsync(int userId, HashSet<ItemStatus> statusFilter)
         {
-            return await _context.InventoryLogs
+            return await Task.Run(() => _context.InventoryLogs
                 .Where(log => log.UserId == userId)
                 .Where(log => !statusFilter.Any() || statusFilter.Contains(log.Status))
                 .Include(log => log.Event)
                 .Select(log => ToDTO(log))
-                .ToListAsync();
+                .ToList());
         }
 
         public async Task<InventoryLogDTO?> GetByIdAsync(int id)
         {
-            var target = await _context.InventoryLogs
-                            .Include(log => log.Event)
-                            .FirstOrDefaultAsync(log => log.Id == id);
-            return target == null ? null : ToDTO(target);
+            return await Task.Run(() =>
+            {
+                var target = _context.InventoryLogs
+                    .Include(log => log.Event)
+                    .FirstOrDefault(log => log.Id == id);
+                return target == null ? null : ToDTO(target);
+            });
         }
 
         public async Task UpdateAsync(InventoryLogDTO newLog)
         {
-            var oldLog = await _context.InventoryLogs.FindAsync(newLog.Id);
-            if (oldLog == null)
+            await Task.Run(() =>
             {
-                throw new KeyNotFoundException("ID does not exist in the database");
-            }
-            UpdateEntity(oldLog, newLog);
-            await _context.SaveChangesAsync();
+                var oldLog = _context.InventoryLogs.Find(newLog.Id)
+                    ?? throw new KeyNotFoundException("ID does not exist in the database");
+                UpdateEntity(oldLog, newLog);
+                _context.SaveChanges();
+            });
         }
 
         public async Task<DashboardSummary> GetSummaryAsync(int userId, DateTime from, DateTime to, int? eventId = null)
         {
-            var baseQuery = _context.InventoryLogs
-                .Where(l => l.UserId == userId)
-                .Where(l => eventId == null || l.EventId == eventId);
-
-            var buysQuery = baseQuery.Where(l => l.BuyDate >= from && l.BuyDate <= to);
-            var salesQuery = baseQuery
-                .Where(l => l.SellDate >= from && l.SellDate <= to)
-                .Where(l => l.SellPerOne != null);
-
-            var buysRaw = await buysQuery
-                .GroupBy(_ => 1)
-                .Select(g => new
-                {
-                    TicketsBought = g.Sum(l => l.Quantity),
-                    UnsoldTickets = g.Sum(l => l.Status == ItemStatus.NotListed || l.Status == ItemStatus.Listed ? l.Quantity : 0),
-                    TotalSpent = (double)g.Sum(l => l.BuyPerOne * l.Quantity),
-                    TotalUnsoldRetailValue = (double)g.Sum(l => l.Status == ItemStatus.NotListed || l.Status == ItemStatus.Listed ? l.BuyPerOne * l.Quantity : 0m),
-                })
-                .FirstOrDefaultAsync();
-
-            decimal totalSpent = (decimal)(buysRaw?.TotalSpent ?? 0);
-            int ticketsBought = buysRaw?.TicketsBought ?? 0;
-
-            var buysSummary = new BuysSummary(
-                ticketsBought,
-                buysRaw?.UnsoldTickets ?? 0,
-                totalSpent,
-                ticketsBought > 0 ? totalSpent / ticketsBought : 0,
-                (decimal)(buysRaw?.TotalUnsoldRetailValue ?? 0));
-
-            var salesRaw = await salesQuery
-                .GroupBy(_ => 1)
-                .Select(g => new
-                {
-                    TicketsSold = g.Sum(l => l.Quantity),
-                    TotalRevenue = (double)g.Sum(l => l.SellPerOne!.Value * l.Quantity),
-                    TotalProfit = (double)g.Sum(l => (l.SellPerOne!.Value - l.BuyPerOne) * l.Quantity),
-                })
-                .FirstOrDefaultAsync();
-
-            var bestEventRaw = await salesQuery
-                .GroupBy(l => l.EventId)
-                .Select(g => new
-                {
-                    EventId = g.Key,
-                    Profit = (double)g.Sum(l => (l.SellPerOne!.Value - l.BuyPerOne) * l.Quantity),
-                    Spend = (double)g.Sum(l => l.BuyPerOne * l.Quantity),
-                })
-                .OrderByDescending(x => x.Profit)
-                .FirstOrDefaultAsync();
-
-            EventDTO? bestEvent = null;
-            if (bestEventRaw != null)
+            return await Task.Run(() =>
             {
-                bestEvent = await _context.Events
-                    .Where(e => e.Id == bestEventRaw.EventId)
-                    .Select(e => new EventDTO
+                var baseQuery = _context.InventoryLogs
+                    .Where(l => l.UserId == userId)
+                    .Where(l => eventId == null || l.EventId == eventId);
+
+                var buysQuery = baseQuery.Where(l => l.BuyDate >= from && l.BuyDate <= to);
+                var salesQuery = baseQuery
+                    .Where(l => l.SellDate >= from && l.SellDate <= to)
+                    .Where(l => l.SellPerOne != null);
+
+                var buysRaw = buysQuery
+                    .GroupBy(_ => 1)
+                    .Select(g => new
                     {
-                        Id = e.Id,
-                        Name = e.Name,
-                        VenueName = e.VenueName,
-                        City = e.City,
-                        Country = e.Country,
-                        Date = e.Date,
-                        EventType = e.EventType
+                        TicketsBought = g.Sum(l => l.Quantity),
+                        UnsoldTickets = g.Sum(l => l.Status == ItemStatus.NotListed || l.Status == ItemStatus.Listed ? l.Quantity : 0),
+                        TotalSpent = (double)g.Sum(l => l.BuyPerOne * l.Quantity),
+                        TotalUnsoldRetailValue = (double)g.Sum(l => l.Status == ItemStatus.NotListed || l.Status == ItemStatus.Listed ? l.BuyPerOne * l.Quantity : 0m),
                     })
-                    .FirstOrDefaultAsync();
-            }
+                    .FirstOrDefault();
 
-            var salesSummary = new SalesSummary(
-                salesRaw?.TicketsSold ?? 0,
-                (decimal)(salesRaw?.TotalRevenue ?? 0),
-                (decimal)(salesRaw?.TotalProfit ?? 0),
-                (decimal)(bestEventRaw?.Profit ?? 0),
-                (decimal)(bestEventRaw?.Spend ?? 0),
-                bestEvent);
+                decimal totalSpent = (decimal)(buysRaw?.TotalSpent ?? 0);
+                int ticketsBought = buysRaw?.TicketsBought ?? 0;
 
-            return new DashboardSummary(buysSummary, salesSummary);
+                var buysSummary = new BuysSummary(
+                    ticketsBought,
+                    buysRaw?.UnsoldTickets ?? 0,
+                    totalSpent,
+                    ticketsBought > 0 ? totalSpent / ticketsBought : 0,
+                    (decimal)(buysRaw?.TotalUnsoldRetailValue ?? 0));
+
+                var salesRaw = salesQuery
+                    .GroupBy(_ => 1)
+                    .Select(g => new
+                    {
+                        TicketsSold = g.Sum(l => l.Quantity),
+                        TotalRevenue = (double)g.Sum(l => l.SellPerOne!.Value * l.Quantity),
+                        TotalProfit = (double)g.Sum(l => (l.SellPerOne!.Value - l.BuyPerOne) * l.Quantity),
+                    })
+                    .FirstOrDefault();
+
+                var bestEventRaw = salesQuery
+                    .GroupBy(l => l.EventId)
+                    .Select(g => new
+                    {
+                        EventId = g.Key,
+                        Profit = (double)g.Sum(l => (l.SellPerOne!.Value - l.BuyPerOne) * l.Quantity),
+                        Spend = (double)g.Sum(l => l.BuyPerOne * l.Quantity),
+                    })
+                    .OrderByDescending(x => x.Profit)
+                    .FirstOrDefault();
+
+                EventDTO? bestEvent = null;
+                if (bestEventRaw != null)
+                {
+                    bestEvent = _context.Events
+                        .Where(e => e.Id == bestEventRaw.EventId)
+                        .Select(e => new EventDTO
+                        {
+                            Id = e.Id,
+                            Name = e.Name,
+                            VenueName = e.VenueName,
+                            City = e.City,
+                            Country = e.Country,
+                            Date = e.Date,
+                            EventType = e.EventType
+                        })
+                        .FirstOrDefault();
+                }
+
+                var salesSummary = new SalesSummary(
+                    salesRaw?.TicketsSold ?? 0,
+                    (decimal)(salesRaw?.TotalRevenue ?? 0),
+                    (decimal)(salesRaw?.TotalProfit ?? 0),
+                    (decimal)(bestEventRaw?.Profit ?? 0),
+                    (decimal)(bestEventRaw?.Spend ?? 0),
+                    bestEvent);
+
+                return new DashboardSummary(buysSummary, salesSummary);
+            });
         }
 
         public async Task<int> ImportAsync(IEnumerable<InventoryLogDTO> logs, int userId, bool replace)
         {
-            if (replace)
+            return await Task.Run(() =>
             {
-                var existing = await _context.InventoryLogs
-                    .Where(l => l.UserId == userId)
-                    .ToListAsync();
-                _context.InventoryLogs.RemoveRange(existing);
-            }
-
-            int imported = 0;
-            foreach (var log in logs)
-            {
-                var matchedEvent = await _context.Events
-                    .FirstOrDefaultAsync(e => e.Name == log.EventName && e.Date == log.EventDate);
-                if (matchedEvent == null) continue;
-
-                _context.InventoryLogs.Add(new InventoryLog
+                if (replace)
                 {
-                    UserId = userId,
-                    EventId = matchedEvent.Id,
-                    BuyDate = log.BuyDate,
-                    SellDate = log.SellDate,
-                    Sector = log.Sector,
-                    Quantity = log.Quantity,
-                    BuyPerOne = log.BuyPerOne,
-                    SellPerOne = log.SellPerOne,
-                    BuyPlatform = log.BuyPlatform,
-                    AccountEmail = log.AccountEmail,
-                    SellPlatform = log.SellPlatform,
-                    Status = log.Status
-                });
-                imported++;
-            }
+                    var existing = _context.InventoryLogs.Where(l => l.UserId == userId).ToList();
+                    _context.InventoryLogs.RemoveRange(existing);
+                }
 
-            await _context.SaveChangesAsync();
-            return imported;
+                int imported = 0;
+                foreach (var log in logs)
+                {
+                    var matchedEvent = _context.Events
+                        .FirstOrDefault(e => e.Name == log.EventName && e.Date == log.EventDate);
+                    if (matchedEvent == null) continue;
+
+                    _context.InventoryLogs.Add(new InventoryLog
+                    {
+                        UserId = userId,
+                        EventId = matchedEvent.Id,
+                        BuyDate = log.BuyDate,
+                        SellDate = log.SellDate,
+                        Sector = log.Sector,
+                        Quantity = log.Quantity,
+                        BuyPerOne = log.BuyPerOne,
+                        SellPerOne = log.SellPerOne,
+                        BuyPlatform = log.BuyPlatform,
+                        AccountEmail = log.AccountEmail,
+                        SellPlatform = log.SellPlatform,
+                        Status = log.Status
+                    });
+                    imported++;
+                }
+
+                _context.SaveChanges();
+                return imported;
+            });
         }
 
         private static InventoryLogDTO ToDTO(InventoryLog logToMap)
@@ -253,7 +259,5 @@ namespace TicketInventoryManager.Services
             oldLog.SellPlatform = newLog.SellPlatform;
             oldLog.Status = newLog.Status;
         }
-
-
     }
 }
