@@ -120,7 +120,7 @@ namespace TicketInventoryManager.Services
                     })
                     .FirstOrDefault();
 
-                var bestEventRaw = salesQuery
+                var bestEventRaw = salesRaw == null ? null : salesQuery
                     .GroupBy(l => l.EventId)
                     .Select(g => new
                     {
