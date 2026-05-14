@@ -38,6 +38,7 @@ namespace TicketInventoryManager.Services
         public async Task<IEnumerable<InventoryLogDTO>> GetAllByUserAsync(int userId)
         {
             return await Task.Run(() => _context.InventoryLogs
+                .AsNoTracking()
                 .Where(log => log.UserId == userId)
                 .Include(log => log.Event)
                 .Select(log => ToDTO(log))
@@ -47,6 +48,7 @@ namespace TicketInventoryManager.Services
         public async Task<IEnumerable<InventoryLogDTO>> GetAllByUserAsync(int userId, HashSet<ItemStatus> statusFilter)
         {
             return await Task.Run(() => _context.InventoryLogs
+                .AsNoTracking()
                 .Where(log => log.UserId == userId)
                 .Where(log => !statusFilter.Any() || statusFilter.Contains(log.Status))
                 .Include(log => log.Event)
@@ -59,6 +61,7 @@ namespace TicketInventoryManager.Services
             return await Task.Run(() =>
             {
                 var target = _context.InventoryLogs
+                    .AsNoTracking()
                     .Include(log => log.Event)
                     .FirstOrDefault(log => log.Id == id);
                 return target == null ? null : ToDTO(target);
@@ -81,6 +84,7 @@ namespace TicketInventoryManager.Services
             return await Task.Run(() =>
             {
                 var baseQuery = _context.InventoryLogs
+                    .AsNoTracking()
                     .Where(l => l.UserId == userId)
                     .Where(l => eventId == null || l.EventId == eventId);
 
@@ -135,6 +139,7 @@ namespace TicketInventoryManager.Services
                 if (bestEventRaw != null)
                 {
                     bestEvent = _context.Events
+                        .AsNoTracking()
                         .Where(e => e.Id == bestEventRaw.EventId)
                         .Select(e => new EventDTO
                         {

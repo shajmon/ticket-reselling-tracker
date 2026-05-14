@@ -63,6 +63,11 @@ namespace TicketInventoryManager.ViewModels
         [ObservableProperty]
         public partial ItemStatus Status { get; set; }
 
+        [ObservableProperty]
+        [NotifyPropertyChangedFor(nameof(HasError))]
+        public partial string? ErrorMessage { get; set; }
+        public bool HasError => ErrorMessage != null;
+
         public InventoryLogDetailsViewModel(IInventoryLogService invLogService, ISessionService sessionService, IEventService eventService)
         {
             _invLogService = invLogService;
@@ -98,6 +103,28 @@ namespace TicketInventoryManager.ViewModels
         [RelayCommand]
         private async Task Save()
         {
+            if (SelectedEvent == null)
+                { ErrorMessage = "Please select an event"; return; }
+            if (string.IsNullOrWhiteSpace(Sector))
+                { ErrorMessage = "Sector is required"; return; }
+            if (!int.TryParse(Quantity, out var qty) || qty <= 0)
+                { ErrorMessage = "Quantity must be a positive number"; return; }
+            if (!decimal.TryParse(BuyPerOne, out var buy) || buy <= 0)
+                { ErrorMessage = "Buy price must be a positive number"; return; }
+            if (string.IsNullOrWhiteSpace(BuyPlatform))
+                { ErrorMessage = "Buy platform is required"; return; }
+            if (string.IsNullOrWhiteSpace(AccountEmail))
+                { ErrorMessage = "Account email is required"; return; }
+            if (IsSold)
+            {
+                if (!decimal.TryParse(SellPerOne, out var sell) || sell <= 0)
+                    { ErrorMessage = "Sell price must be a positive number"; return; }
+                if (string.IsNullOrWhiteSpace(SellPlatform))
+                    { ErrorMessage = "Sell platform is required"; return; }
+            }
+
+            ErrorMessage = null;
+
             if (IsExistingLog)
                 await _invLogService.UpdateAsync(GetDTOFromProperties());
             else

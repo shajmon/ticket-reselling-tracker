@@ -38,6 +38,11 @@ namespace TicketInventoryManager.ViewModels
         [ObservableProperty]
         public partial EventType EventType { get; set; }
 
+        [ObservableProperty]
+        [NotifyPropertyChangedFor(nameof(HasError))]
+        public partial string? ErrorMessage { get; set; }
+        public bool HasError => ErrorMessage != null;
+
         public EventDetailsViewModel(IEventService eventService)
         {
             _eventService = eventService;
@@ -62,6 +67,17 @@ namespace TicketInventoryManager.ViewModels
         [RelayCommand]
         private async Task Save()
         {
+            if (string.IsNullOrWhiteSpace(Name))
+                { ErrorMessage = "Name is required"; return; }
+            if (string.IsNullOrWhiteSpace(VenueName))
+                { ErrorMessage = "Venue is required"; return; }
+            if (string.IsNullOrWhiteSpace(City))
+                { ErrorMessage = "City is required"; return; }
+            if (string.IsNullOrWhiteSpace(Country))
+                { ErrorMessage = "Country is required"; return; }
+
+            ErrorMessage = null;
+
             if (IsExistingEvent)
                 await _eventService.UpdateAsync(GetDTOFromProperties());
             else

@@ -37,6 +37,7 @@ namespace TicketInventoryManager.Services
         public async Task<IEnumerable<EventDTO>> GetAllAsync()
         {
             return await Task.Run(() => _context.Events
+                .AsNoTracking()
                 .Select(currentEvent => ToDTO(currentEvent))
                 .ToList());
         }
@@ -45,7 +46,7 @@ namespace TicketInventoryManager.Services
         {
             return await Task.Run(() =>
             {
-                var target = _context.Events.Find(id);
+                var target = _context.Events.AsNoTracking().FirstOrDefault(e => e.Id == id);
                 return target == null ? null : ToDTO(target);
             });
         }
