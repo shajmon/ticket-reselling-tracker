@@ -180,6 +180,15 @@
                                             </DataTrigger>
                                         </Label.Triggers>
                                     </Label>
+                                    <Label Text="{Binding Roi, StringFormat='({0:N1}%)', TargetNullValue=''}"
+                                           FontSize="13"
+                                           TextColor="{StaticResource AppProfit}">
+                                        <Label.Triggers>
+                                            <DataTrigger TargetType="Label" Binding="{Binding IsLoss}" Value="True">
+                                                <Setter Property="TextColor" Value="{StaticResource AppAccent}" />
+                                            </DataTrigger>
+                                        </Label.Triggers>
+                                    </Label>
                                 </HorizontalStackLayout>
 
                             </Grid>
