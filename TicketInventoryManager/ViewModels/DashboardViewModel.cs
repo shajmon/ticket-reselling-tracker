@@ -2,7 +2,6 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using System.Collections.ObjectModel;
 using TicketInventoryManager.Models.Entities;
-using TicketInventoryManager.Models.Enums;
 using TicketInventoryManager.Services;
 
 namespace TicketInventoryManager.ViewModels
@@ -79,7 +78,7 @@ namespace TicketInventoryManager.ViewModels
         [NotifyPropertyChangedFor(nameof(IsTotalRoiLoss))]
         public partial decimal TotalProfit { get; set; }
 
-        public decimal TotalRoi => TotalRevenue == 0 ? 0 : TotalProfit / TotalRevenue * 100;
+        public decimal TotalRoi => TotalRevenue == TotalProfit ? 0 : TotalProfit / (TotalRevenue - TotalProfit) * 100;
         public bool IsTotalProfitLoss => TotalProfit < 0;
         public bool IsTotalRoiLoss => TotalRoi < 0;
 
@@ -193,6 +192,7 @@ namespace TicketInventoryManager.ViewModels
             {
                 await Task.Delay(50, _cts.Token);
 
+                if (IsBusy) return;
                 IsBusy = true;
 
                 var summaryData = await _invLogService.GetSummaryAsync(User.Id, FromSelector,

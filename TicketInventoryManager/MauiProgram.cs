@@ -1,8 +1,6 @@
 ﻿using CommunityToolkit.Maui;
 using DAL;
-using Microsoft.EntityFrameworkCore.Query.SqlExpressions;
 using Microsoft.Extensions.Logging;
-using Microsoft.Maui.Handlers;
 using TicketInventoryManager.Services;
 
 namespace TicketInventoryManager

@@ -1,11 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using CommunityToolkit.Mvvm.ComponentModel;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using TicketInventoryManager.Models.Entities;
 using TicketInventoryManager.Services;
-using TicketInventoryManager.Views;
 
 namespace TicketInventoryManager.ViewModels
 {

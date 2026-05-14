@@ -1,5 +1,4 @@
-﻿using Microsoft.Extensions.DependencyInjection;
-using TicketInventoryManager.Views;
+﻿using TicketInventoryManager.Views;
 
 namespace TicketInventoryManager
 {

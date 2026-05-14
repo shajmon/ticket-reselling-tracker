@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace TicketInventoryManager.Models.Enums
+﻿namespace TicketInventoryManager.Models.Enums
 {
     public enum Timeframe
     {

@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace TicketInventoryManager.Models.Entities
+﻿namespace TicketInventoryManager.Models.Entities
 {
     public class UserDTO
     {
