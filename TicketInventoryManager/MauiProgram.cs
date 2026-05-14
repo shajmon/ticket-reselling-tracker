@@ -20,7 +20,7 @@ namespace TicketInventoryManager
                     fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
                     fonts.AddFont("OpenSans-Semibold.ttf", "OpenSansSemibold");
                 });
-            builder.Services.AddDbContext<AppDbContext>();
+            builder.Services.AddTransient<AppDbContext>();
 
             builder.Services.AddSingleton<AppShell>();
 
