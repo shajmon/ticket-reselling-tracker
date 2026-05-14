@@ -9,7 +9,8 @@ namespace TicketInventoryManager.ViewModels
 {
     public partial class DashboardViewModel : ObservableObject
     {
-        public UserDTO User;
+        [ObservableProperty]
+        public partial UserDTO User {get; set;}
         private readonly IInventoryLogService _invLogService;
         private readonly ISessionService _sessionService;
         private readonly IEventService _eventService;
