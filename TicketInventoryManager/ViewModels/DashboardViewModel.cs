@@ -70,23 +70,33 @@ namespace TicketInventoryManager.ViewModels
 
         [ObservableProperty]
         [NotifyPropertyChangedFor(nameof(TotalRoi))]
+        [NotifyPropertyChangedFor(nameof(IsTotalRoiLoss))]
         public partial decimal TotalRevenue { get; set; }
 
         [ObservableProperty]
         [NotifyPropertyChangedFor(nameof(TotalRoi))]
+        [NotifyPropertyChangedFor(nameof(IsTotalProfitLoss))]
+        [NotifyPropertyChangedFor(nameof(IsTotalRoiLoss))]
         public partial decimal TotalProfit { get; set; }
 
         public decimal TotalRoi => TotalRevenue == 0 ? 0 : TotalProfit / TotalRevenue * 100;
+        public bool IsTotalProfitLoss => TotalProfit < 0;
+        public bool IsTotalRoiLoss => TotalRoi < 0;
 
         [ObservableProperty]
         [NotifyPropertyChangedFor(nameof(BestRoi))]
+        [NotifyPropertyChangedFor(nameof(IsBestProfitLoss))]
+        [NotifyPropertyChangedFor(nameof(IsBestRoiLoss))]
         public partial decimal BestProfit { get; set; }
 
         [ObservableProperty]
         [NotifyPropertyChangedFor(nameof(BestRoi))]
+        [NotifyPropertyChangedFor(nameof(IsBestRoiLoss))]
         public partial decimal BestEventSpend { get; set; }
 
         public decimal BestRoi => BestEventSpend == 0 ? 0 : BestProfit / BestEventSpend * 100;
+        public bool IsBestProfitLoss => BestProfit < 0;
+        public bool IsBestRoiLoss => BestRoi < 0;
 
         [ObservableProperty]
         public partial EventDTO? BestEvent { get; set; }

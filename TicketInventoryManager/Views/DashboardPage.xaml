@@ -200,12 +200,28 @@
 
                         <VerticalStackLayout Spacing="1" Margin="0,0,0,16">
                             <Label Text="Total profit" Style="{StaticResource StatLabel}" />
-                            <Label Text="{Binding TotalProfit, StringFormat='€{0:N2}'}" Style="{StaticResource StatValueAccent}" />
+                            <Label Text="{Binding TotalProfit, StringFormat='€{0:N2}'}"
+                                   FontSize="20" FontAttributes="Bold"
+                                   TextColor="{StaticResource AppProfit}">
+                                <Label.Triggers>
+                                    <DataTrigger TargetType="Label" Binding="{Binding IsTotalProfitLoss}" Value="True">
+                                        <Setter Property="TextColor" Value="{StaticResource AppAccent}" />
+                                    </DataTrigger>
+                                </Label.Triggers>
+                            </Label>
                         </VerticalStackLayout>
 
                         <VerticalStackLayout Spacing="1" Margin="0,0,0,20">
                             <Label Text="Total ROI" Style="{StaticResource StatLabel}" />
-                            <Label Text="{Binding TotalRoi, StringFormat='{0:N2}%'}" Style="{StaticResource StatValueAccent}" />
+                            <Label Text="{Binding TotalRoi, StringFormat='{0:N2}%'}"
+                                   FontSize="20" FontAttributes="Bold"
+                                   TextColor="{StaticResource AppProfit}">
+                                <Label.Triggers>
+                                    <DataTrigger TargetType="Label" Binding="{Binding IsTotalRoiLoss}" Value="True">
+                                        <Setter Property="TextColor" Value="{StaticResource AppAccent}" />
+                                    </DataTrigger>
+                                </Label.Triggers>
+                            </Label>
                         </VerticalStackLayout>
 
                         <BoxView HeightRequest="1"
@@ -224,11 +240,27 @@
                         <Grid ColumnDefinitions="*, *" ColumnSpacing="12">
                             <VerticalStackLayout Grid.Column="0" Spacing="1">
                                 <Label Text="Best profit" Style="{StaticResource StatLabel}" />
-                                <Label Text="{Binding BestProfit, StringFormat='€{0:N2}'}" Style="{StaticResource StatValueAccent}" />
+                                <Label Text="{Binding BestProfit, StringFormat='€{0:N2}'}"
+                                       FontSize="20" FontAttributes="Bold"
+                                       TextColor="{StaticResource AppProfit}">
+                                    <Label.Triggers>
+                                        <DataTrigger TargetType="Label" Binding="{Binding IsBestProfitLoss}" Value="True">
+                                            <Setter Property="TextColor" Value="{StaticResource AppAccent}" />
+                                        </DataTrigger>
+                                    </Label.Triggers>
+                                </Label>
                             </VerticalStackLayout>
                             <VerticalStackLayout Grid.Column="1" Spacing="1">
                                 <Label Text="Best ROI" Style="{StaticResource StatLabel}" />
-                                <Label Text="{Binding BestRoi, StringFormat='{0:N2}%'}" Style="{StaticResource StatValueAccent}" />
+                                <Label Text="{Binding BestRoi, StringFormat='{0:N2}%'}"
+                                       FontSize="20" FontAttributes="Bold"
+                                       TextColor="{StaticResource AppProfit}">
+                                    <Label.Triggers>
+                                        <DataTrigger TargetType="Label" Binding="{Binding IsBestRoiLoss}" Value="True">
+                                            <Setter Property="TextColor" Value="{StaticResource AppAccent}" />
+                                        </DataTrigger>
+                                    </Label.Triggers>
+                                </Label>
                             </VerticalStackLayout>
                         </Grid>
 

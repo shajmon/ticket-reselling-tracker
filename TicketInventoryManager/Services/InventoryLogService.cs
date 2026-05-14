@@ -95,8 +95,8 @@ namespace TicketInventoryManager.Services
                     {
                         TicketsBought = g.Sum(l => l.Quantity),
                         UnsoldTickets = g.Sum(l => l.Status == ItemStatus.NotListed || l.Status == ItemStatus.Listed ? l.Quantity : 0),
-                        TotalSpent = (double)g.Sum(l => l.BuyPerOne * l.Quantity),
-                        TotalUnsoldRetailValue = (double)g.Sum(l => l.Status == ItemStatus.NotListed || l.Status == ItemStatus.Listed ? l.BuyPerOne * l.Quantity : 0m),
+                        TotalSpent = g.Sum(l => (double)l.BuyPerOne * l.Quantity),
+                        TotalUnsoldRetailValue = g.Sum(l => l.Status == ItemStatus.NotListed || l.Status == ItemStatus.Listed ? (double)l.BuyPerOne * l.Quantity : 0.0),
                     })
                     .FirstOrDefault();
 
@@ -115,8 +115,8 @@ namespace TicketInventoryManager.Services
                     .Select(g => new
                     {
                         TicketsSold = g.Sum(l => l.Quantity),
-                        TotalRevenue = (double)g.Sum(l => l.SellPerOne!.Value * l.Quantity),
-                        TotalProfit = (double)g.Sum(l => (l.SellPerOne!.Value - l.BuyPerOne) * l.Quantity),
+                        TotalRevenue = g.Sum(l => (double)l.SellPerOne!.Value * l.Quantity),
+                        TotalProfit = g.Sum(l => ((double)l.SellPerOne!.Value - (double)l.BuyPerOne) * l.Quantity),
                     })
                     .FirstOrDefault();
 
@@ -125,8 +125,8 @@ namespace TicketInventoryManager.Services
                     .Select(g => new
                     {
                         EventId = g.Key,
-                        Profit = (double)g.Sum(l => (l.SellPerOne!.Value - l.BuyPerOne) * l.Quantity),
-                        Spend = (double)g.Sum(l => l.BuyPerOne * l.Quantity),
+                        Profit = g.Sum(l => ((double)l.SellPerOne!.Value - (double)l.BuyPerOne) * l.Quantity),
+                        Spend = g.Sum(l => (double)l.BuyPerOne * l.Quantity),
                     })
                     .OrderByDescending(x => x.Profit)
                     .FirstOrDefault();

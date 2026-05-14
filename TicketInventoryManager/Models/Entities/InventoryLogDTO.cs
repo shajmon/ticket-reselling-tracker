@@ -24,6 +24,7 @@ namespace TicketInventoryManager.Models.Entities
         public ItemStatus Status { get; set; }
 
         public decimal? Profit => SellPerOne.HasValue ? (SellPerOne - BuyPerOne) * Quantity : null;
+        public bool IsLoss => Profit.HasValue && Profit.Value < 0;
         public decimal? Roi => SellPerOne.HasValue && BuyPerOne > 0 ?
             ((SellPerOne - BuyPerOne) / BuyPerOne) * 100 : null;
         public int? DaysHeld => SellDate.HasValue ? SellDate.Value.Subtract(BuyDate).Days : null;

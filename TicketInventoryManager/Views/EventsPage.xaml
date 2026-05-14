@@ -80,6 +80,13 @@
             <CollectionView ItemsSource="{Binding Events}"
                             SelectionMode="Single"
                             SelectedItem="{Binding SelectedEvent, Mode=TwoWay}">
+                <CollectionView.EmptyView>
+                    <Label Text="No events yet"
+                           TextColor="{StaticResource AppTextMuted}"
+                           FontSize="14"
+                           HorizontalOptions="Center"
+                           Margin="0,32" />
+                </CollectionView.EmptyView>
                 <CollectionView.ItemTemplate>
                     <DataTemplate x:DataType="dto:EventDTO">
                         <Border BackgroundColor="{StaticResource AppSurface}"

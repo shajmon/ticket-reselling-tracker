@@ -131,6 +131,13 @@
             <CollectionView ItemsSource="{Binding Logs}"
                             SelectionMode="Single"
                             SelectedItem="{Binding SelectedLog, Mode=TwoWay}">
+                <CollectionView.EmptyView>
+                    <Label Text="No items yet"
+                           TextColor="{StaticResource AppTextMuted}"
+                           FontSize="14"
+                           HorizontalOptions="Center"
+                           Margin="0,32" />
+                </CollectionView.EmptyView>
                 <CollectionView.ItemTemplate>
                     <DataTemplate x:DataType="dto:InventoryLogDTO">
                         <Border BackgroundColor="{StaticResource AppSurface}"
@@ -166,7 +173,13 @@
                                     <Label Text="{Binding Profit, StringFormat='€{0:N2}', TargetNullValue=''}"
                                            FontSize="13"
                                            FontAttributes="Bold"
-                                           TextColor="#D93030" />
+                                           TextColor="{StaticResource AppProfit}">
+                                        <Label.Triggers>
+                                            <DataTrigger TargetType="Label" Binding="{Binding IsLoss}" Value="True">
+                                                <Setter Property="TextColor" Value="{StaticResource AppAccent}" />
+                                            </DataTrigger>
+                                        </Label.Triggers>
+                                    </Label>
                                 </HorizontalStackLayout>
 
                             </Grid>
