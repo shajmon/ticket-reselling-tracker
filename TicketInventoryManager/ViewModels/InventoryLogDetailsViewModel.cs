@@ -103,24 +103,9 @@ namespace TicketInventoryManager.ViewModels
         [RelayCommand]
         private async Task Save()
         {
-            if (SelectedEvent == null)
-                { ErrorMessage = "Please select an event"; return; }
-            if (string.IsNullOrWhiteSpace(Sector))
-                { ErrorMessage = "Sector is required"; return; }
-            if (!int.TryParse(Quantity, out var qty) || qty <= 0)
-                { ErrorMessage = "Quantity must be a positive number"; return; }
-            if (!decimal.TryParse(BuyPerOne, out var buy) || buy <= 0)
-                { ErrorMessage = "Buy price must be a positive number"; return; }
-            if (string.IsNullOrWhiteSpace(BuyPlatform))
-                { ErrorMessage = "Buy platform is required"; return; }
-            if (string.IsNullOrWhiteSpace(AccountEmail))
-                { ErrorMessage = "Account email is required"; return; }
-            if (IsSold)
+            if (!IsValidUserInput())
             {
-                if (!decimal.TryParse(SellPerOne, out var sell) || sell <= 0)
-                    { ErrorMessage = "Sell price must be a positive number"; return; }
-                if (string.IsNullOrWhiteSpace(SellPlatform))
-                    { ErrorMessage = "Sell platform is required"; return; }
+                return;
             }
 
             ErrorMessage = null;
@@ -158,6 +143,54 @@ namespace TicketInventoryManager.ViewModels
                 SellPlatform = SellPlatform,
                 Status = Status
             };
+        }
+
+        private bool IsValidUserInput()
+        {
+            if (SelectedEvent == null)
+            { 
+                ErrorMessage = "Please select an event"; 
+                return false; 
+            }
+            if (string.IsNullOrWhiteSpace(Sector))
+            { 
+                ErrorMessage = "Sector is required";
+                return false; 
+            }
+            if (!int.TryParse(Quantity, out var qty) || qty <= 0)
+            { 
+                ErrorMessage = "Quantity must be a positive number";
+                return false; 
+            }
+            if (!decimal.TryParse(BuyPerOne, out var buy) || buy <= 0)
+            { 
+                ErrorMessage = "Buy price must be a positive number";
+                return false; 
+            }
+            if (string.IsNullOrWhiteSpace(BuyPlatform))
+            { 
+                ErrorMessage = "Buy platform is required";
+                return false; 
+            }
+            if (string.IsNullOrWhiteSpace(AccountEmail))
+            { 
+                ErrorMessage = "Account email is required";
+                return false; 
+            }
+            if (IsSold)
+            {
+                if (!decimal.TryParse(SellPerOne, out var sell) || sell <= 0)
+                { 
+                    ErrorMessage = "Sell price must be a positive number";
+                    return false; 
+                }
+                if (string.IsNullOrWhiteSpace(SellPlatform))
+                { 
+                    ErrorMessage = "Sell platform is required";
+                    return false; 
+                }
+            }
+            return true;
         }
     }
 }

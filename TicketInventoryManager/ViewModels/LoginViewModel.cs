@@ -27,13 +27,9 @@ namespace TicketInventoryManager.ViewModels
         [ObservableProperty]
         public partial bool IsLoading { get; set; }
         [ObservableProperty]
-        [NotifyPropertyChangedFor(nameof(HasLoginError))]
-        public partial string? LoginError { get; set; }
-        public bool HasLoginError => LoginError != null;
-        [ObservableProperty]
-        [NotifyPropertyChangedFor(nameof(HasRegistrationError))]
-        public partial string? RegistrationError { get; set; }
-        public bool HasRegistrationError => RegistrationError != null;
+        [NotifyPropertyChangedFor(nameof(HasError))]
+        public partial string? ErrorMessage { get; set; }
+        public bool HasError => ErrorMessage != null;
 
         public LoginViewModel(IUserService userService, ISessionService sessionService)
         {
@@ -50,8 +46,7 @@ namespace TicketInventoryManager.ViewModels
         private async Task TryLogin()
         {
             IsLoading = true;
-            RegistrationError = null;
-            LoginError = null;
+            ErrorMessage = null;
 
             UserDTO? loggedUser = await _userService.LoginAsync(Username, Password);
 
@@ -59,7 +54,7 @@ namespace TicketInventoryManager.ViewModels
 
             if (loggedUser == null)
             {
-                LoginError = "Invalid username or password";
+                ErrorMessage = "Invalid username or password";
                 return;
             }
             _sessionService.CurrentUser = loggedUser;
@@ -70,19 +65,18 @@ namespace TicketInventoryManager.ViewModels
         private async Task RegisterNewUser()
         {
             IsLoading = true;
-            RegistrationError = null;
-            LoginError = null;
+            ErrorMessage = null;
 
             if (Username.Length < 3)
             {
-                RegistrationError = "Username must be at least 3 characters long";
+                ErrorMessage = "Username must be at least 3 characters long";
                 IsLoading = false;
                 return;
             }
 
             if (Password.Length < 8)
             {
-                RegistrationError = "Password must be at least 8 characters long";
+                ErrorMessage = "Password must be at least 8 characters long";
                 IsLoading = false;
                 return;
             }
@@ -92,10 +86,10 @@ namespace TicketInventoryManager.ViewModels
                 _sessionService.CurrentUser = await _userService.RegisterAsync(Username, Password);
                 IsLoading = false;
                 await SuccesfulLogin();
-            } 
+            }
             else
             {
-                RegistrationError = "Passwords do not match";
+                ErrorMessage = "Passwords do not match";
                 IsLoading = false;
             }
         }
@@ -103,8 +97,7 @@ namespace TicketInventoryManager.ViewModels
         [RelayCommand]
         private void ChangeMode()
         {
-            RegistrationError = null;
-            LoginError = null;
+            ErrorMessage = null;
             RepeatPassword = string.Empty;
 
             if (IsRegistering)

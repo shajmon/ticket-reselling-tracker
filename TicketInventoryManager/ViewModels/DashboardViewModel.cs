@@ -101,7 +101,9 @@ namespace TicketInventoryManager.ViewModels
         [ObservableProperty]
         public partial EventDTO? BestEvent { get; set; }
 
-        public DashboardViewModel(IInventoryLogService inventoryLogService, ISessionService sessionService, IEventService eventService)
+        public DashboardViewModel(IInventoryLogService inventoryLogService,
+                                  ISessionService sessionService, 
+                                  IEventService eventService)
         {
             _invLogService = inventoryLogService;
             _sessionService = sessionService;
@@ -160,6 +162,18 @@ namespace TicketInventoryManager.ViewModels
             await Shell.Current.GoToAsync("//login");
         }
 
+        [RelayCommand]
+        private async Task GoToInventory()
+        {
+            await Shell.Current.GoToAsync("//inventory");
+        }
+
+        [RelayCommand]
+        private async Task GoToEvents()
+        {
+            await Shell.Current.GoToAsync("//events");
+        }
+
         partial void OnFromSelectorChanged(DateTime value)
         {
             _ = LoadDataAsync();
@@ -181,7 +195,8 @@ namespace TicketInventoryManager.ViewModels
 
                 IsBusy = true;
 
-                var summaryData = await _invLogService.GetSummaryAsync(User.Id, FromSelector, ToSelector, EventId);
+                var summaryData = await _invLogService.GetSummaryAsync(User.Id, FromSelector,
+                                                                       ToSelector, EventId);
                 var buys = summaryData.Buys;
                 var sells = summaryData.Sales;
 
@@ -203,18 +218,6 @@ namespace TicketInventoryManager.ViewModels
             {
                 IsBusy = false;
             }
-        }
-
-        [RelayCommand]
-        private async Task GoToInventory()
-        {
-            await Shell.Current.GoToAsync("//inventory");
-        }
-
-        [RelayCommand]
-        private async Task GoToEvents()
-        {
-            await Shell.Current.GoToAsync("//events");
         }
     }
 }

@@ -67,14 +67,10 @@ namespace TicketInventoryManager.ViewModels
         [RelayCommand]
         private async Task Save()
         {
-            if (string.IsNullOrWhiteSpace(Name))
-                { ErrorMessage = "Name is required"; return; }
-            if (string.IsNullOrWhiteSpace(VenueName))
-                { ErrorMessage = "Venue is required"; return; }
-            if (string.IsNullOrWhiteSpace(City))
-                { ErrorMessage = "City is required"; return; }
-            if (string.IsNullOrWhiteSpace(Country))
-                { ErrorMessage = "Country is required"; return; }
+            if (!IsValidUserInput())
+            {
+                return;
+            }
 
             ErrorMessage = null;
 
@@ -105,6 +101,31 @@ namespace TicketInventoryManager.ViewModels
                 Date = Date,
                 EventType = EventType
             };
+        }
+
+        private bool IsValidUserInput()
+        {
+            if (string.IsNullOrWhiteSpace(Name))
+            { 
+                ErrorMessage = "Name is required"; 
+                return false; 
+            }
+            if (string.IsNullOrWhiteSpace(VenueName))
+            { 
+                ErrorMessage = "Venue is required";
+                return false; 
+            }
+            if (string.IsNullOrWhiteSpace(City))
+            { 
+                ErrorMessage = "City is required";
+                return false; 
+            }
+            if (string.IsNullOrWhiteSpace(Country))
+            { 
+                ErrorMessage = "Country is required";
+                return false; 
+            }
+            return true;
         }
     }
 }
