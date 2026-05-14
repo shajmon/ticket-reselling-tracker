@@ -59,6 +59,9 @@
                        TextColor="{StaticResource AppTextPrimary}"
                        VerticalOptions="Center" />
                 <HorizontalStackLayout Grid.Column="1" Spacing="4" VerticalOptions="Center">
+                    <Button Text="Dashboard"
+                            Command="{Binding GoToDashboardCommand}"
+                            Style="{StaticResource GhostButton}" />
                     <Button Text="Export"
                             Command="{Binding ExportEventsCommand}"
                             Style="{StaticResource ChipButton}" />
