@@ -50,6 +50,7 @@ namespace TicketInventoryManager.ViewModels
         private async Task TryLogin()
         {
             IsLoading = true;
+            RegistrationError = null;
             LoginError = null;
 
             UserDTO? loggedUser = await _userService.LoginAsync(Username, Password);
@@ -70,6 +71,21 @@ namespace TicketInventoryManager.ViewModels
         {
             IsLoading = true;
             RegistrationError = null;
+            LoginError = null;
+
+            if (Username.Length < 3)
+            {
+                RegistrationError = "Username must be at least 3 characters long";
+                IsLoading = false;
+                return;
+            }
+
+            if (Password.Length < 8)
+            {
+                RegistrationError = "Password must be at least 8 characters long";
+                IsLoading = false;
+                return;
+            }
 
             if (Password == RepeatPassword)
             {
@@ -87,6 +103,10 @@ namespace TicketInventoryManager.ViewModels
         [RelayCommand]
         private void ChangeMode()
         {
+            RegistrationError = null;
+            LoginError = null;
+            RepeatPassword = string.Empty;
+
             if (IsRegistering)
             {
                 Username = string.Empty;
