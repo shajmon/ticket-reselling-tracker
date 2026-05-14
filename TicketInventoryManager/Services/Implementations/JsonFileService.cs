@@ -1,7 +1,4 @@
 ﻿using CommunityToolkit.Maui.Storage;
-using Microsoft.EntityFrameworkCore.Storage.ValueConversion.Internal;
-using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Text;
 using System.Text.Json;
@@ -11,33 +8,42 @@ namespace TicketInventoryManager.Services
 {
     public class JsonFileService : IFileService
     {
+        
+        
         public async Task<bool> ExportEventsAsync(ObservableCollection<EventDTO> events)
         {
-            string serializedEvents = JsonSerializer.Serialize(events);
-            using var stream = new MemoryStream(Encoding.UTF8.GetBytes(serializedEvents));
-            try
-            {
-                await FileSaver.Default.SaveAsync("events_export.json", stream);
-                return true;
-            }
-            catch { }
-            return false;
+            return await ExportAsync(events, "events_export.json");
         }
 
         public async Task<bool> ExportLogsAsync(ObservableCollection<InventoryLogDTO> logs)
         {
-            string json = JsonSerializer.Serialize(logs);
-            using var stream = new MemoryStream(Encoding.UTF8.GetBytes(json));
+            return await ExportAsync(logs, "inventory_export.json");
+        }
+
+        public async Task<ObservableCollection<EventDTO>?> ImportEventsAsync()
+        {
+            return await ImportAsync<EventDTO>();
+        }
+
+        public async Task<ObservableCollection<InventoryLogDTO>?> ImportLogsAsync()
+        {
+            return await ImportAsync<InventoryLogDTO>();
+        }
+
+        private async Task<bool> ExportAsync<T>(ObservableCollection<T> list, string defaultName)
+        {
+            string serialized = JsonSerializer.Serialize(list);
+            using var stream = new MemoryStream(Encoding.UTF8.GetBytes(serialized));
             try
             {
-                await FileSaver.Default.SaveAsync("logs_export.json", stream);
+                await FileSaver.Default.SaveAsync(defaultName, stream);
                 return true;
             }
             catch { }
             return false;
         }
 
-        public async Task<ObservableCollection<EventDTO>?> ImportEventsAsync()
+        private async Task<ObservableCollection<T>?> ImportAsync<T>()
         {
             var selected = await FilePicker.Default.PickAsync();
             if (selected == null)
@@ -51,26 +57,7 @@ namespace TicketInventoryManager.Services
 
             try
             {
-                return JsonSerializer.Deserialize<ObservableCollection<EventDTO>>(json);
-            }
-            catch
-            {
-                return null;
-            }
-        }
-
-        public async Task<ObservableCollection<InventoryLogDTO>?> ImportLogsAsync()
-        {
-            var selected = await FilePicker.Default.PickAsync();
-            if (selected == null) return null;
-
-            using var stream = await selected.OpenReadAsync();
-            using var reader = new StreamReader(stream);
-            string json = await reader.ReadToEndAsync();
-
-            try
-            {
-                return JsonSerializer.Deserialize<ObservableCollection<InventoryLogDTO>>(json);
+                return JsonSerializer.Deserialize<ObservableCollection<T>>(json);
             }
             catch
             {

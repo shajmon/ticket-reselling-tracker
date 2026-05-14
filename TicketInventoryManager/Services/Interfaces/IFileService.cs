@@ -11,6 +11,6 @@ namespace TicketInventoryManager.Services
         Task<bool> ExportLogsAsync(ObservableCollection<InventoryLogDTO> logs);
         Task<ObservableCollection<InventoryLogDTO>?> ImportLogsAsync();
         Task<bool> ExportEventsAsync(ObservableCollection<EventDTO> events);
-        Task <ObservableCollection<EventDTO>?> ImportEventsAsync();
+        Task<ObservableCollection<EventDTO>?> ImportEventsAsync();
     }
 }
