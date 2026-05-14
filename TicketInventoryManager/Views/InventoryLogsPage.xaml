@@ -108,8 +108,7 @@
                            VerticalOptions="Center" />
                     <Picker Grid.Column="1"
                             ItemsSource="{Binding EventNames}"
-                            SelectedItem="{Binding SelectedEventFilter}"
-                            Title="All events" />
+                            SelectedItem="{Binding SelectedEventFilter}" />
                     <Button Grid.Column="2" Text="Clear"
                             Command="{Binding ClearEventFilterCommand}"
                             Style="{StaticResource ChipButton}" />
@@ -121,8 +120,7 @@
                            Margin="16,0,0,0" />
                     <Picker Grid.Column="4"
                             ItemsSource="{Binding VenueNames}"
-                            SelectedItem="{Binding SelectedVenueFilter}"
-                            Title="All venues" />
+                            SelectedItem="{Binding SelectedVenueFilter}" />
                     <Button Grid.Column="5" Text="Clear"
                             Command="{Binding ClearVenueFilterCommand}"
                             Style="{StaticResource ChipButton}" />

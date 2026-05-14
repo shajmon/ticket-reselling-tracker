@@ -54,7 +54,6 @@
                         <Picker ItemsSource="{Binding Events}"
                                 SelectedItem="{Binding SelectedEvent}"
                                 ItemDisplayBinding="{Binding DisplayName}"
-                                Title="Select an event"
                                 Margin="4,0" />
                     </Border>
                 </VerticalStackLayout>

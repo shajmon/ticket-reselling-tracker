@@ -105,7 +105,7 @@
                     Padding="20,16">
                 <VerticalStackLayout Spacing="12">
 
-                    <Grid ColumnDefinitions="Auto,Auto,Auto,Auto,*,Auto,Auto,Auto">
+                    <Grid ColumnDefinitions="Auto,Auto,Auto,Auto,*,Auto,Auto,Auto,Auto">
                         <Label Grid.Column="0" Text="From" VerticalOptions="Center"
                                TextColor="{StaticResource AppTextMuted}" FontSize="13" Margin="0,0,6,0" />
                         <DatePicker Grid.Column="1" Date="{Binding FromSelector}" />
@@ -113,9 +113,10 @@
                                TextColor="{StaticResource AppTextMuted}" FontSize="13" Margin="12,0,6,0" />
                         <DatePicker Grid.Column="3" Date="{Binding ToSelector}" />
                         <BoxView Grid.Column="4" BackgroundColor="Transparent" />
-                        <Button Grid.Column="5" Text="This month" Command="{Binding SelectThisMonthCommand}" Style="{StaticResource ChipButton}" />
-                        <Button Grid.Column="6" Text="Last month" Command="{Binding SelectLastMonthCommand}" Style="{StaticResource ChipButton}" Margin="6,0,0,0" />
-                        <Button Grid.Column="7" Text="This year" Command="{Binding SelectThisYearCommand}" Style="{StaticResource ChipButton}" Margin="6,0,0,0" />
+                        <Button Grid.Column="5" Text="All time" Command="{Binding SelectAllTimeCommand}" Style="{StaticResource ChipButton}" />
+                        <Button Grid.Column="6" Text="This month" Command="{Binding SelectThisMonthCommand}" Style="{StaticResource ChipButton}" Margin="6,0,0,0" />
+                        <Button Grid.Column="7" Text="Last month" Command="{Binding SelectLastMonthCommand}" Style="{StaticResource ChipButton}" Margin="6,0,0,0" />
+                        <Button Grid.Column="8" Text="This year" Command="{Binding SelectThisYearCommand}" Style="{StaticResource ChipButton}" Margin="6,0,0,0" />
                     </Grid>
 
                     <Grid ColumnDefinitions="Auto,*,Auto">
@@ -124,8 +125,7 @@
                         <Picker Grid.Column="1"
                                 ItemsSource="{Binding Events}"
                                 SelectedItem="{Binding SelectedEvent}"
-                                ItemDisplayBinding="{Binding DisplayName}"
-                                Title="All events" />
+                                ItemDisplayBinding="{Binding DisplayName}" />
                         <Button Grid.Column="2" Text="Clear"
                                 Command="{Binding ClearEventCommand}"
                                 Style="{StaticResource ChipButton}"

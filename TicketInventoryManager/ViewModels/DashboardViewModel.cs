@@ -100,6 +100,13 @@ namespace TicketInventoryManager.ViewModels
         }
 
         [RelayCommand]
+        private void SelectAllTime()
+        {
+            FromSelector = DateTime.MinValue;
+            ToSelector = DateTime.Now;
+        }
+
+        [RelayCommand]
         private void SelectThisMonth()
         {
             var now = DateTime.Now;
