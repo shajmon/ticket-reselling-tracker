@@ -1,4 +1,4 @@
-﻿using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using DAL.Enums;
 using System.Collections.ObjectModel;
@@ -12,11 +12,40 @@ namespace TicketInventoryManager.ViewModels
         private readonly IInventoryLogService _invLogService;
         private readonly ISessionService _sessionService;
         private readonly IFileService _fileService;
+        private List<InventoryLogDTO> _allLogs = [];
 
         [ObservableProperty]
         public partial ObservableCollection<InventoryLogDTO> Logs { get; set; } = [];
 
+        [ObservableProperty]
+        public partial ObservableCollection<string> EventNames { get; set; } = [];
+
+        [ObservableProperty]
+        public partial ObservableCollection<string> VenueNames { get; set; } = [];
+
         public HashSet<ItemStatus> StatusFilter { get; set; } = [];
+
+        private string? _selectedEventFilter;
+        public string? SelectedEventFilter
+        {
+            get => _selectedEventFilter;
+            set
+            {
+                if (SetProperty(ref _selectedEventFilter, value))
+                    ApplyFilters();
+            }
+        }
+
+        private string? _selectedVenueFilter;
+        public string? SelectedVenueFilter
+        {
+            get => _selectedVenueFilter;
+            set
+            {
+                if (SetProperty(ref _selectedVenueFilter, value))
+                    ApplyFilters();
+            }
+        }
 
         public bool IsNotListedSelected
         {
@@ -26,7 +55,7 @@ namespace TicketInventoryManager.ViewModels
                 if (value) StatusFilter.Add(ItemStatus.NotListed);
                 else StatusFilter.Remove(ItemStatus.NotListed);
                 OnPropertyChanged();
-                _ = LoadLogsAsync();
+                ApplyFilters();
             }
         }
 
@@ -38,7 +67,7 @@ namespace TicketInventoryManager.ViewModels
                 if (value) StatusFilter.Add(ItemStatus.Listed);
                 else StatusFilter.Remove(ItemStatus.Listed);
                 OnPropertyChanged();
-                _ = LoadLogsAsync();
+                ApplyFilters();
             }
         }
 
@@ -50,7 +79,7 @@ namespace TicketInventoryManager.ViewModels
                 if (value) StatusFilter.Add(ItemStatus.ToDeliver);
                 else StatusFilter.Remove(ItemStatus.ToDeliver);
                 OnPropertyChanged();
-                _ = LoadLogsAsync();
+                ApplyFilters();
             }
         }
 
@@ -62,7 +91,7 @@ namespace TicketInventoryManager.ViewModels
                 if (value) StatusFilter.Add(ItemStatus.Delivered);
                 else StatusFilter.Remove(ItemStatus.Delivered);
                 OnPropertyChanged();
-                _ = LoadLogsAsync();
+                ApplyFilters();
             }
         }
 
@@ -91,6 +120,18 @@ namespace TicketInventoryManager.ViewModels
         private async Task Init()
         {
             await LoadLogsAsync();
+        }
+
+        [RelayCommand]
+        private void ClearEventFilter()
+        {
+            SelectedEventFilter = null;
+        }
+
+        [RelayCommand]
+        private void ClearVenueFilter()
+        {
+            SelectedVenueFilter = null;
         }
 
         [RelayCommand]
@@ -136,8 +177,26 @@ namespace TicketInventoryManager.ViewModels
 
         private async Task LoadLogsAsync()
         {
-            Logs = new ObservableCollection<InventoryLogDTO>(
-                await _invLogService.GetAllByUserAsync(_sessionService.CurrentUser!.Id, StatusFilter));
+            _allLogs = (await _invLogService.GetAllByUserAsync(_sessionService.CurrentUser!.Id)).ToList();
+            EventNames = new ObservableCollection<string>(_allLogs.Select(l => l.EventName).Distinct().Order());
+            VenueNames = new ObservableCollection<string>(_allLogs.Select(l => l.VenueName).Distinct().Order());
+            ApplyFilters();
+        }
+
+        private void ApplyFilters()
+        {
+            var filtered = _allLogs.AsEnumerable();
+
+            if (StatusFilter.Count > 0)
+                filtered = filtered.Where(l => StatusFilter.Contains(l.Status));
+
+            if (SelectedEventFilter != null)
+                filtered = filtered.Where(l => l.EventName == SelectedEventFilter);
+
+            if (SelectedVenueFilter != null)
+                filtered = filtered.Where(l => l.VenueName == SelectedVenueFilter);
+
+            Logs = new ObservableCollection<InventoryLogDTO>(filtered);
         }
     }
 }

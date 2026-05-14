@@ -76,29 +76,58 @@
                 </HorizontalStackLayout>
             </Grid>
 
-            <!-- Status filters -->
-            <HorizontalStackLayout Spacing="16">
-                <Label Text="Filter"
-                       FontSize="11"
-                       TextColor="{StaticResource AppTextMuted}"
-                       VerticalOptions="Center" />
-                <HorizontalStackLayout Spacing="6">
-                    <CheckBox IsChecked="{Binding IsNotListedSelected}" Color="{StaticResource AppAccent}" />
-                    <Label Text="Not Listed" FontSize="13" TextColor="{StaticResource AppTextMuted}" VerticalOptions="Center" />
+            <!-- Filters -->
+            <VerticalStackLayout Spacing="8">
+                <HorizontalStackLayout Spacing="16">
+                    <Label Text="Status"
+                           FontSize="11"
+                           TextColor="{StaticResource AppTextMuted}"
+                           VerticalOptions="Center" />
+                    <HorizontalStackLayout Spacing="6">
+                        <CheckBox IsChecked="{Binding IsNotListedSelected}" Color="{StaticResource AppAccent}" />
+                        <Label Text="Not Listed" FontSize="13" TextColor="{StaticResource AppTextMuted}" VerticalOptions="Center" />
+                    </HorizontalStackLayout>
+                    <HorizontalStackLayout Spacing="6">
+                        <CheckBox IsChecked="{Binding IsListedSelected}" Color="{StaticResource AppAccent}" />
+                        <Label Text="Listed" FontSize="13" TextColor="{StaticResource AppTextMuted}" VerticalOptions="Center" />
+                    </HorizontalStackLayout>
+                    <HorizontalStackLayout Spacing="6">
+                        <CheckBox IsChecked="{Binding IsToDeliverSelected}" Color="{StaticResource AppAccent}" />
+                        <Label Text="To Deliver" FontSize="13" TextColor="{StaticResource AppTextMuted}" VerticalOptions="Center" />
+                    </HorizontalStackLayout>
+                    <HorizontalStackLayout Spacing="6">
+                        <CheckBox IsChecked="{Binding IsDeliveredSelected}" Color="{StaticResource AppAccent}" />
+                        <Label Text="Delivered" FontSize="13" TextColor="{StaticResource AppTextMuted}" VerticalOptions="Center" />
+                    </HorizontalStackLayout>
                 </HorizontalStackLayout>
-                <HorizontalStackLayout Spacing="6">
-                    <CheckBox IsChecked="{Binding IsListedSelected}" Color="{StaticResource AppAccent}" />
-                    <Label Text="Listed" FontSize="13" TextColor="{StaticResource AppTextMuted}" VerticalOptions="Center" />
-                </HorizontalStackLayout>
-                <HorizontalStackLayout Spacing="6">
-                    <CheckBox IsChecked="{Binding IsToDeliverSelected}" Color="{StaticResource AppAccent}" />
-                    <Label Text="To Deliver" FontSize="13" TextColor="{StaticResource AppTextMuted}" VerticalOptions="Center" />
-                </HorizontalStackLayout>
-                <HorizontalStackLayout Spacing="6">
-                    <CheckBox IsChecked="{Binding IsDeliveredSelected}" Color="{StaticResource AppAccent}" />
-                    <Label Text="Delivered" FontSize="13" TextColor="{StaticResource AppTextMuted}" VerticalOptions="Center" />
-                </HorizontalStackLayout>
-            </HorizontalStackLayout>
+
+                <Grid ColumnDefinitions="Auto,*,Auto,Auto,*,Auto" ColumnSpacing="8">
+                    <Label Grid.Column="0" Text="Event"
+                           FontSize="11"
+                           TextColor="{StaticResource AppTextMuted}"
+                           VerticalOptions="Center" />
+                    <Picker Grid.Column="1"
+                            ItemsSource="{Binding EventNames}"
+                            SelectedItem="{Binding SelectedEventFilter}"
+                            Title="All events" />
+                    <Button Grid.Column="2" Text="Clear"
+                            Command="{Binding ClearEventFilterCommand}"
+                            Style="{StaticResource ChipButton}" />
+
+                    <Label Grid.Column="3" Text="Venue"
+                           FontSize="11"
+                           TextColor="{StaticResource AppTextMuted}"
+                           VerticalOptions="Center"
+                           Margin="16,0,0,0" />
+                    <Picker Grid.Column="4"
+                            ItemsSource="{Binding VenueNames}"
+                            SelectedItem="{Binding SelectedVenueFilter}"
+                            Title="All venues" />
+                    <Button Grid.Column="5" Text="Clear"
+                            Command="{Binding ClearVenueFilterCommand}"
+                            Style="{StaticResource ChipButton}" />
+                </Grid>
+            </VerticalStackLayout>
 
             <!-- Log list -->
             <CollectionView ItemsSource="{Binding Logs}"
