@@ -21,8 +21,6 @@ namespace TicketInventoryManager.ViewModels
         public partial bool IsRegistering { get; set; }
         public bool IsLoggingIn => !IsRegistering;
         [ObservableProperty]
-        public partial bool IsLoading { get; set; }
-        [ObservableProperty]
         [NotifyPropertyChangedFor(nameof(HasError))]
         public partial string? ErrorMessage { get; set; }
         public bool HasError => ErrorMessage != null;
@@ -35,18 +33,14 @@ namespace TicketInventoryManager.ViewModels
             Password = string.Empty;
             RepeatPassword = string.Empty;
             IsRegistering = false;
-            IsLoading = false;
         }
 
         [RelayCommand]
         private async Task TryLogin()
         {
-            IsLoading = true;
             ErrorMessage = null;
 
             UserDTO? loggedUser = await _userService.LoginAsync(Username, Password);
-
-            IsLoading = false;
 
             if (loggedUser == null)
             {
@@ -54,39 +48,34 @@ namespace TicketInventoryManager.ViewModels
                 return;
             }
             _sessionService.CurrentUser = loggedUser;
-            await SuccesfulLogin();
+            await SuccessfulLogin();
         }
 
         [RelayCommand]
         private async Task RegisterNewUser()
         {
-            IsLoading = true;
             ErrorMessage = null;
 
             if (Username.Length < 3)
             {
                 ErrorMessage = "Username must be at least 3 characters long";
-                IsLoading = false;
                 return;
             }
 
             if (Password.Length < 8)
             {
                 ErrorMessage = "Password must be at least 8 characters long";
-                IsLoading = false;
                 return;
             }
 
             if (Password == RepeatPassword)
             {
                 _sessionService.CurrentUser = await _userService.RegisterAsync(Username, Password);
-                IsLoading = false;
-                await SuccesfulLogin();
+                await SuccessfulLogin();
             }
             else
             {
                 ErrorMessage = "Passwords do not match";
-                IsLoading = false;
             }
         }
 
@@ -105,7 +94,7 @@ namespace TicketInventoryManager.ViewModels
             IsRegistering = !IsRegistering;
         }
 
-        private async Task SuccesfulLogin()
+        private async Task SuccessfulLogin()
         {
             await Shell.Current.GoToAsync("//dashboard");
         }

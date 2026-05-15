@@ -30,6 +30,9 @@ namespace TicketInventoryManager.ViewModels
             set => SetProperty(ref _selectedEvent, value);
         }
 
+        // properties from ui stored as strings at first, to work around
+        // xaml entry binding returning string 
+
         [ObservableProperty]
         public partial DateTime BuyDate { get; set; } = DateTime.Today;
 
