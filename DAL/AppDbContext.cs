@@ -25,7 +25,7 @@ namespace DAL
                 }
             );
 
-            /*modelBuilder.Entity<Event>().HasData(
+            modelBuilder.Entity<Event>().HasData(
                 new Event
                 {
                     Id = 1,
@@ -435,7 +435,7 @@ namespace DAL
                     AccountEmail = "admin@test.com",
                     Status = ItemStatus.ToDeliver
                 }
-            );*/
+            );
         }
     }
 }
