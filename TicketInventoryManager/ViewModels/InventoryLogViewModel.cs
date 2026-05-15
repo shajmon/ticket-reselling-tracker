@@ -156,14 +156,21 @@ namespace TicketInventoryManager.ViewModels
         [RelayCommand]
         private async Task ExportLogsAsync()
         {
-            await _fileService.ExportLogsAsync(Logs);
+            if (!(await _fileService.ExportLogsAsync(Logs)))
+            {
+                await Shell.Current.DisplayAlertAsync("Export Error", "No logs exported", "OK");
+            }
         }
 
         [RelayCommand]
         private async Task ImportLogsAsync()
         {
             var imported = await _fileService.ImportLogsAsync();
-            if (imported == null) return;
+            if (imported == null)
+            {
+                await Shell.Current.DisplayAlertAsync("Import Error", "No logs imported", "OK");
+                return;
+            }
 
             bool replace = await Shell.Current.DisplayAlertAsync(
                 "Import mode",

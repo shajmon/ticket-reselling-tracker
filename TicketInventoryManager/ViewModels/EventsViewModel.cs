@@ -64,7 +64,7 @@ namespace TicketInventoryManager.ViewModels
         {
             if (!(await _fileService.ExportEventsAsync(Events)))
             {
-                await Shell.Current.DisplayAlertAsync("Export Error", "Failed to export events", "OK");
+                await Shell.Current.DisplayAlertAsync("Export Error", "No events exported", "OK");
             }
         }
 
@@ -74,7 +74,7 @@ namespace TicketInventoryManager.ViewModels
             var toImport = await _fileService.ImportEventsAsync();
             if (toImport == null)
             {
-                await Shell.Current.DisplayAlertAsync("Import Error", "Failed to import events", "OK");
+                await Shell.Current.DisplayAlertAsync("Import Error", "No events imported", "OK");
             }
             else
             {
