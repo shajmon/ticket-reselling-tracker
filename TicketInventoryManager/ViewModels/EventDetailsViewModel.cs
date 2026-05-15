@@ -49,7 +49,7 @@ namespace TicketInventoryManager.ViewModels
         }
 
         [RelayCommand]
-        private async Task Init()
+        private async Task InitAsync()
         {
             if (!IsExistingEvent) return;
 
@@ -65,7 +65,7 @@ namespace TicketInventoryManager.ViewModels
         }
 
         [RelayCommand]
-        private async Task Save()
+        private async Task SaveAsync()
         {
             if (!IsValidUserInput())
             {
@@ -83,7 +83,7 @@ namespace TicketInventoryManager.ViewModels
         }
 
         [RelayCommand]
-        private async Task Delete()
+        private async Task DeleteAsync()
         {
             await _eventService.DeleteAsync(EventId);
             await Shell.Current.GoToAsync("..");

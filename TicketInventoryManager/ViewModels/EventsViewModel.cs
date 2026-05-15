@@ -28,52 +28,52 @@ namespace TicketInventoryManager.ViewModels
             {
                 if (SetProperty(ref _selectedEvent, value) && value != null)
                 {
-                    _ = ShowDetails(value.Id);
+                    _ = ShowDetailsAsync(value.Id);
                     SetProperty(ref _selectedEvent, null);
                 }
             }
         }
 
         [RelayCommand]
-        private async Task Init()
+        private async Task InitAsync()
         {
             Events = new ObservableCollection<EventDTO>(await _eventService.GetAllAsync());
         }
 
         [RelayCommand]
-        private async Task ShowDetails(int id)
+        private async Task ShowDetailsAsync(int id)
         {
             await Shell.Current.GoToAsync($"eventdetail?id={id}");
         }
 
         [RelayCommand]
-        private async Task NewEvent()
+        private async Task NewEventAsync()
         {
             await Shell.Current.GoToAsync("eventdetail");
         }
 
         [RelayCommand]
-        private async Task GoToDashboard()
+        private async Task GoToDashboardAsync()
         {
             await Shell.Current.GoToAsync("//dashboard");
         }
 
         [RelayCommand]
-        private async Task ExportEvents()
+        private async Task ExportEventsAsync()
         {
             if (!(await _fileService.ExportEventsAsync(Events)))
             {
-                await Application.Current!.Windows[0].Page!.DisplayAlertAsync("Export Error", "Failed to export events", "OK");
+                await Shell.Current.DisplayAlertAsync("Export Error", "Failed to export events", "OK");
             }
         }
 
         [RelayCommand]
-        private async Task ImportEvents()
+        private async Task ImportEventsAsync()
         {
             var toImport = await _fileService.ImportEventsAsync();
             if (toImport == null)
             {
-                await Application.Current!.Windows[0].Page!.DisplayAlertAsync("Import Error", "Failed to import events", "OK");
+                await Shell.Current.DisplayAlertAsync("Import Error", "Failed to import events", "OK");
             }
             else
             {

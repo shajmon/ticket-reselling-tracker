@@ -79,7 +79,7 @@ namespace TicketInventoryManager.ViewModels
         }
 
         [RelayCommand]
-        private async Task Init()
+        private async Task InitAsync()
         {
             Events = new ObservableCollection<EventDTO>(await _eventService.GetAllAsync());
 
@@ -104,7 +104,7 @@ namespace TicketInventoryManager.ViewModels
         }
 
         [RelayCommand]
-        private async Task Save()
+        private async Task SaveAsync()
         {
             if (!IsValidUserInput())
             {
@@ -122,7 +122,7 @@ namespace TicketInventoryManager.ViewModels
         }
 
         [RelayCommand]
-        private async Task Delete()
+        private async Task DeleteAsync()
         {
             await _invLogService.DeleteAsync(LogId);
             await Shell.Current.GoToAsync("..");

@@ -103,7 +103,7 @@ namespace TicketInventoryManager.ViewModels
             {
                 if (SetProperty(ref _selectedLog, value) && value != null)
                 {
-                    _ = ShowDetails(value.Id);
+                    _ = ShowDetailsAsync(value.Id);
                     SetProperty(ref _selectedLog, null);
                 }
             }
@@ -117,7 +117,7 @@ namespace TicketInventoryManager.ViewModels
         }
 
         [RelayCommand]
-        private async Task Init()
+        private async Task InitAsync()
         {
             await LoadLogsAsync();
         }
@@ -135,31 +135,31 @@ namespace TicketInventoryManager.ViewModels
         }
 
         [RelayCommand]
-        private async Task ShowDetails(int id)
+        private async Task ShowDetailsAsync(int id)
         {
             await Shell.Current.GoToAsync($"logdetail?id={id}");
         }
 
         [RelayCommand]
-        private async Task NewLog()
+        private async Task NewLogAsync()
         {
             await Shell.Current.GoToAsync("logdetail");
         }
 
         [RelayCommand]
-        private async Task GoToDashboard()
+        private async Task GoToDashboardAsync()
         {
             await Shell.Current.GoToAsync("//dashboard");
         }
 
         [RelayCommand]
-        private async Task ExportLogs()
+        private async Task ExportLogsAsync()
         {
             await _fileService.ExportLogsAsync(Logs);
         }
 
         [RelayCommand]
-        private async Task ImportLogs()
+        private async Task ImportLogsAsync()
         {
             var imported = await _fileService.ImportLogsAsync();
             if (imported == null) return;

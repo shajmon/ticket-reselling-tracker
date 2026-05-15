@@ -36,7 +36,7 @@ namespace TicketInventoryManager.ViewModels
         }
 
         [RelayCommand]
-        private async Task TryLogin()
+        private async Task TryLoginAsync()
         {
             ErrorMessage = null;
 
@@ -48,11 +48,11 @@ namespace TicketInventoryManager.ViewModels
                 return;
             }
             _sessionService.CurrentUser = loggedUser;
-            await SuccessfulLogin();
+            await SuccessfulLoginAsync();
         }
 
         [RelayCommand]
-        private async Task RegisterNewUser()
+        private async Task RegisterNewUserAsync()
         {
             ErrorMessage = null;
 
@@ -68,15 +68,20 @@ namespace TicketInventoryManager.ViewModels
                 return;
             }
 
-            if (Password == RepeatPassword)
-            {
-                _sessionService.CurrentUser = await _userService.RegisterAsync(Username, Password);
-                await SuccessfulLogin();
-            }
-            else
+            if (Password != RepeatPassword)
             {
                 ErrorMessage = "Passwords do not match";
+                return;
             }
+
+            if (await _userService.GetByUsernameAsync(Username) != null)
+            {
+                ErrorMessage = "Username is already taken";
+                return;
+            }
+
+            _sessionService.CurrentUser = await _userService.RegisterAsync(Username, Password);
+            await SuccessfulLoginAsync();
         }
 
         [RelayCommand]
@@ -94,7 +99,7 @@ namespace TicketInventoryManager.ViewModels
             IsRegistering = !IsRegistering;
         }
 
-        private async Task SuccessfulLogin()
+        private async Task SuccessfulLoginAsync()
         {
             await Shell.Current.GoToAsync("//dashboard");
         }

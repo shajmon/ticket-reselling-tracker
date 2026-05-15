@@ -12,33 +12,6 @@ namespace TicketInventoryManager.Services
             _context = context;
         }
 
-        public async Task DeleteAsync(int id)
-        {
-            await Task.Run(() =>
-            {
-                var toDelete = _context.Users.Find(id);
-                if (toDelete == null) return;
-                _context.Users.Remove(toDelete);
-                _context.SaveChanges();
-            });
-        }
-
-        public async Task<IEnumerable<UserDTO>> GetAllAsync()
-        {
-            return await Task.Run(() => _context.Users
-                .Select(user => ToDTO(user))
-                .ToList());
-        }
-
-        public async Task<UserDTO?> GetByIdAsync(int id)
-        {
-            return await Task.Run(() =>
-            {
-                var target = _context.Users.Find(id);
-                return target == null ? null : ToDTO(target);
-            });
-        }
-
         public async Task<UserDTO?> GetByUsernameAsync(string username)
         {
             return await Task.Run(() =>

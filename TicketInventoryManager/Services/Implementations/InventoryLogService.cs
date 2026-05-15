@@ -2,7 +2,6 @@ using DAL;
 using DAL.Entities;
 using DAL.Enums;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Logging;
 using TicketInventoryManager.Models.DataSummary;
 using TicketInventoryManager.Models.Entities;
 

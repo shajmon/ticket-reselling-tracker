@@ -142,7 +142,7 @@ namespace TicketInventoryManager.ViewModels
         }
 
         [RelayCommand]
-        private async Task Init()
+        private async Task InitAsync()
         {
             Events = new ObservableCollection<EventDTO>(await _eventService.GetAllAsync());
             await LoadDataAsync();
@@ -155,20 +155,20 @@ namespace TicketInventoryManager.ViewModels
         }
 
         [RelayCommand]
-        private async Task Logout()
+        private async Task LogoutAsync()
         {
             _sessionService.CurrentUser = null;
             await Shell.Current.GoToAsync("//login");
         }
 
         [RelayCommand]
-        private async Task GoToInventory()
+        private async Task GoToInventoryAsync()
         {
             await Shell.Current.GoToAsync("//inventory");
         }
 
         [RelayCommand]
-        private async Task GoToEvents()
+        private async Task GoToEventsAsync()
         {
             await Shell.Current.GoToAsync("//events");
         }
