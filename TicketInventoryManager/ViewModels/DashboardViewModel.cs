@@ -214,7 +214,7 @@ namespace TicketInventoryManager.ViewModels
                 BestEventSpend = sells.BestEventSpend;
                 BestEvent = sells.BestEvent;
             }
-            catch (OperationCanceledException) { }
+            catch (OperationCanceledException) { } //debounce cancel
             finally
             {
                 IsBusy = false;
