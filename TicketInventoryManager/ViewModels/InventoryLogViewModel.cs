@@ -2,6 +2,7 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using DAL.Enums;
 using System.Collections.ObjectModel;
+using TicketInventoryManager.Constants;
 using TicketInventoryManager.Models.Entities;
 using TicketInventoryManager.Services;
 
@@ -137,19 +138,19 @@ namespace TicketInventoryManager.ViewModels
         [RelayCommand]
         private async Task ShowDetailsAsync(int id)
         {
-            await Shell.Current.GoToAsync($"logdetail?id={id}");
+            await Shell.Current.GoToAsync($"{AppConstants.LogDetailRoute}?id={id}");
         }
 
         [RelayCommand]
         private async Task NewLogAsync()
         {
-            await Shell.Current.GoToAsync("logdetail");
+            await Shell.Current.GoToAsync(AppConstants.LogDetailRoute);
         }
 
         [RelayCommand]
         private async Task GoToDashboardAsync()
         {
-            await Shell.Current.GoToAsync("//dashboard");
+            await Shell.Current.GoToAsync(AppConstants.DashboardRoute);
         }
 
         [RelayCommand]

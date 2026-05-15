@@ -2,6 +2,7 @@
 using CommunityToolkit.Mvvm.Input;
 using TicketInventoryManager.Models.Entities;
 using TicketInventoryManager.Services;
+using TicketInventoryManager.Constants;
 
 namespace TicketInventoryManager.ViewModels
 {
@@ -56,15 +57,15 @@ namespace TicketInventoryManager.ViewModels
         {
             ErrorMessage = null;
 
-            if (Username.Length < 3)
+            if (Username.Length < AppConstants.MinUsernameLength)
             {
-                ErrorMessage = "Username must be at least 3 characters long";
+                ErrorMessage = $"Username must be at least {AppConstants.MinUsernameLength} characters long";
                 return;
             }
 
-            if (Password.Length < 8)
+            if (Password.Length < AppConstants.MinPasswordLength)
             {
-                ErrorMessage = "Password must be at least 8 characters long";
+                ErrorMessage = $"Password must be at least {AppConstants.MinPasswordLength} characters long";
                 return;
             }
 
@@ -101,7 +102,7 @@ namespace TicketInventoryManager.ViewModels
 
         private async Task SuccessfulLoginAsync()
         {
-            await Shell.Current.GoToAsync("//dashboard");
+            await Shell.Current.GoToAsync(AppConstants.DashboardRoute);
         }
     }
 }

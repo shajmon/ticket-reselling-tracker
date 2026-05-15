@@ -1,4 +1,5 @@
-﻿using TicketInventoryManager.Views;
+﻿using TicketInventoryManager.Constants;
+using TicketInventoryManager.Views;
 
 namespace TicketInventoryManager
 {
@@ -7,8 +8,8 @@ namespace TicketInventoryManager
         public AppShell()
         {
             InitializeComponent();
-            Routing.RegisterRoute("logdetail", typeof(InventoryLogDetailsPage));
-            Routing.RegisterRoute("eventdetail", typeof(EventDetailsPage));
+            Routing.RegisterRoute(AppConstants.LogDetailRoute, typeof(InventoryLogDetailsPage));
+            Routing.RegisterRoute(AppConstants.EventDetailRoute, typeof(EventDetailsPage));
         }
     }
 }

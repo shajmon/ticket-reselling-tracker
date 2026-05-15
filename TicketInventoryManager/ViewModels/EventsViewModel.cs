@@ -1,6 +1,7 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using System.Collections.ObjectModel;
+using TicketInventoryManager.Constants;
 using TicketInventoryManager.Models.Entities;
 using TicketInventoryManager.Services;
 
@@ -43,19 +44,19 @@ namespace TicketInventoryManager.ViewModels
         [RelayCommand]
         private async Task ShowDetailsAsync(int id)
         {
-            await Shell.Current.GoToAsync($"eventdetail?id={id}");
+            await Shell.Current.GoToAsync($"{AppConstants.EventDetailRoute}?id={id}");
         }
 
         [RelayCommand]
         private async Task NewEventAsync()
         {
-            await Shell.Current.GoToAsync("eventdetail");
+            await Shell.Current.GoToAsync(AppConstants.EventDetailRoute);
         }
 
         [RelayCommand]
         private async Task GoToDashboardAsync()
         {
-            await Shell.Current.GoToAsync("//dashboard");
+            await Shell.Current.GoToAsync(AppConstants.DashboardRoute);
         }
 
         [RelayCommand]

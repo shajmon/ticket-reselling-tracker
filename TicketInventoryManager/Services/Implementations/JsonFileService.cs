@@ -2,6 +2,7 @@
 using System.Collections.ObjectModel;
 using System.Text;
 using System.Text.Json;
+using TicketInventoryManager.Constants;
 using TicketInventoryManager.Models.Entities;
 
 namespace TicketInventoryManager.Services
@@ -12,12 +13,12 @@ namespace TicketInventoryManager.Services
         
         public async Task<bool> ExportEventsAsync(ObservableCollection<EventDTO> events)
         {
-            return await ExportAsync(events, "events_export.json");
+            return await ExportAsync(events, AppConstants.DefaultExportNameEvents);
         }
 
         public async Task<bool> ExportLogsAsync(ObservableCollection<InventoryLogDTO> logs)
         {
-            return await ExportAsync(logs, "inventory_export.json");
+            return await ExportAsync(logs, AppConstants.DefaultExportNameLogs);
         }
 
         public async Task<ObservableCollection<EventDTO>?> ImportEventsAsync()

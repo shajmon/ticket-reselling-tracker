@@ -1,6 +1,7 @@
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using System.Collections.ObjectModel;
+using TicketInventoryManager.Constants;
 using TicketInventoryManager.Models.Entities;
 using TicketInventoryManager.Services;
 
@@ -158,19 +159,19 @@ namespace TicketInventoryManager.ViewModels
         private async Task LogoutAsync()
         {
             _sessionService.CurrentUser = null;
-            await Shell.Current.GoToAsync("//login");
+            await Shell.Current.GoToAsync(AppConstants.LoginRoute);
         }
 
         [RelayCommand]
         private async Task GoToInventoryAsync()
         {
-            await Shell.Current.GoToAsync("//inventory");
+            await Shell.Current.GoToAsync(AppConstants.InventoryRoute);
         }
 
         [RelayCommand]
         private async Task GoToEventsAsync()
         {
-            await Shell.Current.GoToAsync("//events");
+            await Shell.Current.GoToAsync(AppConstants.EventsRoute);
         }
 
         partial void OnFromSelectorChanged(DateTime value)
